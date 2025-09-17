@@ -4,43 +4,48 @@ import java.time.LocalDateTime;
 
 public class Propuesta {
     private int id;
-    private String titulo;
-    private String sinopsis;
-    private int escritorId;
+    private String tituloPropuesto;
+    private String resumen;
+    private String archivoUrl;
     private EstadoPropuesta estado;
     private LocalDateTime fechaCreacion;
-    private LocalDateTime fechaActualizacion;
+    private LocalDateTime fechaDecision;
 
-    public Propuesta() {}
-
-    public Propuesta(String titulo, String sinopsis, int escritorId) {
-        this.titulo = titulo;
-        this.sinopsis = sinopsis;
-        this.escritorId = escritorId;
-        this.estado = EstadoPropuesta.BORRADOR;
-        this.fechaCreacion = LocalDateTime.now();
-        this.fechaActualizacion = this.fechaCreacion;
+    public Propuesta(int id,
+                     String tituloPropuesto,
+                     String resumen,
+                     String archivoUrl,
+                     EstadoPropuesta estado,
+                     LocalDateTime fechaCreacion,
+                     LocalDateTime fechaDecision) {
+        this.id = id;
+        this.tituloPropuesto = tituloPropuesto;
+        this.resumen = resumen;
+        this.archivoUrl = archivoUrl;
+        this.estado = estado;
+        this.fechaCreacion = fechaCreacion;
+        this.fechaDecision = fechaDecision;
     }
 
-    private void touch() {
-        this.fechaActualizacion = LocalDateTime.now();
-    }
-
+    // getters / setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; touch(); }
+    public String getTituloPropuesto() { return tituloPropuesto; }
+    public void setTituloPropuesto(String tituloPropuesto) { this.tituloPropuesto = tituloPropuesto; }
 
-    public String getSinopsis() { return sinopsis; }
-    public void setSinopsis(String sinopsis) { this.sinopsis = sinopsis; touch(); }
+    public String getResumen() { return resumen; }
+    public void setResumen(String resumen) { this.resumen = resumen; }
 
-    public int getEscritorId() { return escritorId; }
-    public void setEscritorId(int escritorId) { this.escritorId = escritorId; touch(); }
+    public String getArchivoUrl() { return archivoUrl; }
+    public void setArchivoUrl(String archivoUrl) { this.archivoUrl = archivoUrl; }
 
     public EstadoPropuesta getEstado() { return estado; }
-    public void setEstado(EstadoPropuesta estado) { this.estado = estado; touch(); }
+    public void setEstado(EstadoPropuesta estado) { this.estado = estado; }
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
-    public LocalDateTime getFechaActualizacion() { return fechaActualizacion; }
+    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+
+    public LocalDateTime getFechaDecision() { return fechaDecision; }
+    public void setFechaDecision(LocalDateTime fechaDecision) { this.fechaDecision = fechaDecision; }
 }
