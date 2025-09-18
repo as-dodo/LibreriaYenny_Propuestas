@@ -3,8 +3,8 @@ package models.titulos;
 public class Titulo {
     private String id;
     private String titulo;
-    private String autor;               // имя автора
-    private String descripcionCorta;    // краткое описание
+    private String autor;
+    private String descripcionCorta;
     private EstadoComercializacion estadoComercializacion;
 
     public Titulo(String id,
