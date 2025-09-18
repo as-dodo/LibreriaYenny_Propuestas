@@ -1,4 +1,5 @@
 package menu;
 
-public class Menu {
+public interface Menu {
+    void run();
 }
