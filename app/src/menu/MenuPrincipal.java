@@ -25,8 +25,22 @@ public class MenuPrincipal implements Menu {
             if (opcion == 2 || opcion == JOptionPane.CLOSED_OPTION) break;
 
             switch (opcion) {
-                case 0 -> JOptionPane.showMessageDialog(null, "Iniciar sesión");
-                case 1 -> JOptionPane.showMessageDialog(null, "Registrarse");
+                case 0 -> {
+                    String email = JOptionPane.showInputDialog("Email:");
+                    if (email == null) break;
+                    String pass  = JOptionPane.showInputDialog("Contraseña:");
+                    if (pass == null) break;
+                    JOptionPane.showMessageDialog(null, "Iniciar sesión (en construcción)");
+                }
+                case 1 -> {
+                    String nombre = JOptionPane.showInputDialog("Nombre:");
+                    if (nombre == null) break;
+                    String email  = JOptionPane.showInputDialog("Email:");
+                    if (email == null) break;
+                    String pass   = JOptionPane.showInputDialog("Contraseña:");
+                    if (pass == null) break;
+                    JOptionPane.showMessageDialog(null, "Registro (en construcción)");
+                }
                 default -> {}
             }
         }
