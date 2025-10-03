@@ -1,6 +1,7 @@
 package menu;
 
 import javax.swing.*;
+import services.AuthService;
 
 public class MenuPrincipal implements Menu {
     @Override
@@ -10,6 +11,7 @@ public class MenuPrincipal implements Menu {
                 "Registrarse",
                 "Salir"
         };
+        AuthService auth = new AuthService();
 
         while (true) {
             int opcion = JOptionPane.showOptionDialog (
@@ -39,7 +41,8 @@ public class MenuPrincipal implements Menu {
                     if (email == null) break;
                     String pass   = JOptionPane.showInputDialog("Contraseña:");
                     if (pass == null) break;
-                    JOptionPane.showMessageDialog(null, "Registro (en construcción)");
+                    String resultado = auth.registrarse(nombre, email, pass);
+                    JOptionPane.showMessageDialog(null, resultado);;
                 }
                 default -> {}
             }
