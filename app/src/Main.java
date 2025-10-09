@@ -1,5 +1,5 @@
-import conexion.Conexion;
-import menu.MenuPrincipal;
+import dll.Conexion;
+import ui.menu.MenuPrincipal;
 import java.sql.Connection;
 
 public class Main {
