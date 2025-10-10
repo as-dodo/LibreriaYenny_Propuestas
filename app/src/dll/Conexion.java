@@ -10,18 +10,11 @@ public class Conexion {
     private static final String PASSWORD = "";
 
     private static Conexion instance;
-    private Connection connection;
 
     private Conexion() {
-        try {
-            connection = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("✅ Se conectó");
-        } catch (SQLException e) {
-            System.out.println("❌ No se conectó: " + e.getMessage());
-        }
     }
 
-    public static Conexion getInstance() {
+    public static synchronized Conexion getInstance() {
         if (instance == null) {
             instance = new Conexion();
         }
@@ -29,6 +22,14 @@ public class Conexion {
     }
 
     public Connection getConnection() {
-        return connection;
+        try {
+            Connection cn = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("✅ Se conectó");
+            return cn;
+        } catch (SQLException e) {
+            System.out.println("❌ No se conectó: " + e.getMessage());
+            return null;
+        }
     }
 }
+

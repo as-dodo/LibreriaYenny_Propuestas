@@ -10,45 +10,40 @@ import java.sql.Connection;
 
 public class AuthService {
 
-    public String iniciarSesion(String email, String password) {
-
+    public Usuario autenticar(String email, String password) {
         if (Validaciones.isBlank(email) || Validaciones.isBlank(password)) {
-            return "Campos obligatorios vacíos";
+            return null;
         }
         if (!Validaciones.emailValido(email)) {
-            return "Email inválido";
+            return null;
         }
 
-        ControllerUsuario ctrl = new ControllerUsuario();
+        dll.ControllerUsuario ctrl = new dll.ControllerUsuario();
 
-        try (Connection cn = Conexion.getInstance().getConnection()) {
+        try (java.sql.Connection cn = dll.Conexion.getInstance().getConnection()) {
             if (cn == null) {
-                return "No hay conexión a la base de datos";
+                return null;
             }
 
             if (!ctrl.emailExiste(cn, email.trim())) {
-                return "Email no registrado";
+                return null;
             }
 
             String hashDb = ctrl.obtenerPasswordHashPorEmail(cn, email.trim());
             if (hashDb == null || hashDb.isBlank()) {
-                return "Error: no se encontró contraseña para este usuario";
+                return null;
             }
 
-            String hashInput = HashUtil.sha256(password);
+            String hashInput = repository.HashUtil.sha256(password);
+
             if (hashInput.equals(hashDb)) {
-                Usuario usuario = ctrl.obtenerUsuarioPorEmail(cn, email.trim());
-                if (usuario != null) {
-                    return "¡Bienvenido, " + usuario.getNombre() +
-                            "! Sesión iniciada como " + usuario.getRol() + ".";
-                }
-                return "Sesión iniciada";
-            } else {
-                return "Credenciales inválidas";
+                return ctrl.obtenerUsuarioPorEmail(cn, email.trim());
             }
+
+            return null;
 
         } catch (Exception e) {
-            return "Error: " + e.getMessage();
+            return null;
         }
     }
 

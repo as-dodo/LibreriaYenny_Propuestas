@@ -1,8 +1,19 @@
 package ui.menu;
 
+import bll.services.PropuestaService;
+import bll.usuarios.Escritor;
+
 import javax.swing.*;
 
 public class MenuEscritor implements Menu {
+
+    private final Escritor escritor;
+    private final PropuestaService service = new PropuestaService();
+
+    public MenuEscritor(Escritor escritor) {
+        this.escritor = escritor;
+    }
+
     @Override
     public void run() {
         String[] opciones = {
@@ -25,10 +36,30 @@ public class MenuEscritor implements Menu {
             if (opcion == 2 || opcion == JOptionPane.CLOSED_OPTION) break;
 
             switch (opcion) {
-                case 0 -> JOptionPane.showMessageDialog(null, "Enviar propuesta");
-                case 1 -> JOptionPane.showMessageDialog(null, "Ver mis propuestas");
+                case 0 -> enviarPropuesta();
+                case 1 -> verMisPropuestas();
                 default -> {}
             }
         }
     }
+
+    private void enviarPropuesta() {
+        String titulo  = JOptionPane.showInputDialog("Título propuesto:");
+        if (titulo == null) return;
+        String resumen = JOptionPane.showInputDialog("Resumen (breve):");
+        if (resumen == null) return;
+        String enlace  = JOptionPane.showInputDialog("Enlace al archivo (opcional):");
+        // puede ser null
+
+        String msg = service.enviarPropuesta(escritor.getId(), titulo, resumen, enlace);
+        JOptionPane.showMessageDialog(null, msg);
+    }
+
+    private void verMisPropuestas() {
+        String listado = service.listarPorEscritor(escritor.getId());
+        JTextArea ta = new JTextArea(listado, 15, 60);
+        ta.setEditable(false);
+        JOptionPane.showMessageDialog(null, new JScrollPane(ta), "Mis propuestas", JOptionPane.INFORMATION_MESSAGE);
+    }
 }
+
