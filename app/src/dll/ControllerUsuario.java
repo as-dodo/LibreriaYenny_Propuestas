@@ -54,7 +54,7 @@ public class ControllerUsuario {
                     String nombre = rs.getString("nombre");
                     String correo = rs.getString("email");
 
-                    return switch (rol.toUpperCase()) {
+                    return switch (rol) {
                         case "EDITOR" -> new Editor(id, nombre, correo);
                         case "ADMIN" -> new Admin(id, nombre, correo);
                         default -> new Escritor(id, nombre, correo);

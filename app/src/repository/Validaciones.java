@@ -17,4 +17,19 @@ public class Validaciones {
     public static boolean passwordMinLen(String pass, int min) {
         return pass != null && pass.length() >= min;
     }
+
+    public static boolean esNumero(String s) {
+        if (s == null) return false;
+        try {
+            Integer.parseInt(s.trim());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static String linkOrNull(String s) {
+        return (s == null || s.isBlank()) ? null : s.trim();
+    }
+
 }
