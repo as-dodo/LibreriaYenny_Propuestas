@@ -80,4 +80,30 @@ public class PropuestaService {
         }
     }
 
+
+    public String obtenerDetalle(String propuestaId) {
+        if (Validaciones.isBlank(propuestaId) || !Validaciones.esNumero(propuestaId)) return null;
+        ControllerPropuesta ctrl = new ControllerPropuesta();
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            return ctrl.obtenerDetalle(cn, Integer.parseInt(propuestaId));
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+
+    public String agregarComentario(String propuestaId, int usuarioId, String comentario) {
+        if (Validaciones.isBlank(propuestaId) || !Validaciones.esNumero(propuestaId)) return "ID inválido";
+        if (usuarioId <= 0) return "Usuario inválido";
+        if (Validaciones.isBlank(comentario)) return "Comentario vacío";
+
+        ControllerPropuesta ctrl = new ControllerPropuesta();
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            boolean ok = ctrl.agregarComentario(cn, Integer.parseInt(propuestaId), usuarioId, comentario);
+            return ok ? "Comentario agregado" : "No se pudo agregar el comentario";
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
 }
+
