@@ -45,7 +45,7 @@ public class MenuPrincipal implements Menu {
 
                     switch (usuario.getRol()) {
                         case ESCRITOR -> new MenuEscritor((Escritor) usuario).run();
-                        case EDITOR -> new MenuEditor().run();
+                        case EDITOR -> new MenuEditor(usuario).run();
                         case ADMIN -> new MenuAdmin().run();
                         default -> {
                         }

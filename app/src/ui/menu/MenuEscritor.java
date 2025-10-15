@@ -49,7 +49,6 @@ public class MenuEscritor implements Menu {
         String resumen = JOptionPane.showInputDialog("Resumen (breve):");
         if (resumen == null) return;
         String enlace  = JOptionPane.showInputDialog("Enlace al archivo (opcional):");
-        // puede ser null
 
         String msg = service.enviarPropuesta(escritor.getId(), titulo, resumen, enlace);
         JOptionPane.showMessageDialog(null, msg);
