@@ -4,7 +4,6 @@ import bll.usuarios.Admin;
 import bll.usuarios.Editor;
 import bll.usuarios.Escritor;
 import bll.usuarios.Usuario;
-
 import java.sql.*;
 
 public class ControllerUsuario {
@@ -65,6 +64,24 @@ public class ControllerUsuario {
         return null;
     }
 
+    public boolean insertarUsuario(Connection cn, Usuario usuario, String passwordHash) throws SQLException {
+        String sql = "INSERT INTO usuarios (nombre, email, password_hash, rol) VALUES (?,?,?,?)";
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, usuario.getNombre());
+            ps.setString(2, usuario.getEmail());
+            ps.setString(3, passwordHash);
+            ps.setString(4, usuario.getRol().name());
+            return ps.executeUpdate() > 0;
+        }
+    }
 
+    public boolean actualizarRol(Connection cn, Usuario usuario) throws SQLException {
+        String sql = "UPDATE usuarios SET rol = ? WHERE email = ?";
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, usuario.getRol().name());
+            ps.setString(2, usuario.getEmail());
+            return ps.executeUpdate() > 0;
+        }
+    }
 
 }
