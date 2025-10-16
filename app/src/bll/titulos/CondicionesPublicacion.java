@@ -1,23 +1,34 @@
 package bll.titulos;
 
 public class CondicionesPublicacion {
-    private String id;
+    private Integer id;
+    private int propuestaId;
     private int tiradaInicial;
     private double porcentajeGananciasAutor;
     private String observaciones;
 
-    public CondicionesPublicacion(String id,
-                                  int tiradaInicial,
-                                  double porcentajeGananciasAutor,
-                                  String observaciones) {
+    public CondicionesPublicacion(Integer id, int propuestaId, int tiradaInicial,
+                                  double porcentajeGananciasAutor, String observaciones) {
         this.id = id;
+        this.propuestaId = propuestaId;
         this.tiradaInicial = tiradaInicial;
         this.porcentajeGananciasAutor = porcentajeGananciasAutor;
         this.observaciones = observaciones;
     }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public CondicionesPublicacion(int propuestaId, int tiradaInicial,
+                                  double porcentajeGananciasAutor, String observaciones) {
+        this.propuestaId = propuestaId;
+        this.tiradaInicial = tiradaInicial;
+        this.porcentajeGananciasAutor = porcentajeGananciasAutor;
+        this.observaciones = observaciones;
+    }
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+
+    public int getPropuestaId() { return propuestaId; }
+    public void setPropuestaId(int propuestaId) { this.propuestaId = propuestaId; }
 
     public int getTiradaInicial() { return tiradaInicial; }
     public void setTiradaInicial(int tiradaInicial) { this.tiradaInicial = tiradaInicial; }
