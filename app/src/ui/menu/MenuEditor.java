@@ -1,12 +1,14 @@
 package ui.menu;
 
-import javax.swing.*;
 import bll.services.PropuestaService;
-import bll.usuarios.Usuario; // предполагаем, что есть getId() и getNombre()
+import bll.services.TituloService;
+import bll.usuarios.Usuario;
+import javax.swing.*;
 
 public class MenuEditor implements Menu {
 
     private final PropuestaService service = new PropuestaService();
+    private final TituloService tituloService = new TituloService();
     private final Usuario editorActual;
 
     public MenuEditor(Usuario editorActual) {
@@ -18,6 +20,8 @@ public class MenuEditor implements Menu {
         String[] opciones = {
                 "Ver bandeja de propuestas",
                 "Revisar propuesta (ver / aprobar / rechazar / comentar)",
+                "Definir condiciones de publicación",
+                "Crear título desde propuesta aprobada",
                 "Salir"
         };
 
@@ -33,11 +37,13 @@ public class MenuEditor implements Menu {
                     opciones[0]
             );
 
-            if (opcion == 2 || opcion == JOptionPane.CLOSED_OPTION) break;
+            if (opcion == 4 || opcion == JOptionPane.CLOSED_OPTION) break;
 
             switch (opcion) {
                 case 0 -> verBandeja();
                 case 1 -> revisarPropuesta();
+                case 2 -> definirCondiciones();
+                case 3 -> crearTitulo();
                 default -> {}
             }
         }
@@ -91,5 +97,32 @@ public class MenuEditor implements Menu {
             }
             default -> {}
         }
+    }
+
+    private void definirCondiciones() {
+        String propuestaId = JOptionPane.showInputDialog("ID de la propuesta aprobada:");
+        if (propuestaId == null) return;
+
+        String tirada = JOptionPane.showInputDialog("Tirada inicial:");
+        if (tirada == null) return;
+
+        String porcentaje = JOptionPane.showInputDialog("Porcentaje de ganancias para el autor (0-100):");
+        if (porcentaje == null) return;
+
+        String observaciones = JOptionPane.showInputDialog("Observaciones (opcional):");
+
+        String resultado = tituloService.definirCondiciones(propuestaId, tirada, porcentaje, observaciones);
+        JOptionPane.showMessageDialog(null, resultado);
+    }
+
+    private void crearTitulo() {
+        String propuestaId = JOptionPane.showInputDialog("ID de la propuesta aprobada:");
+        if (propuestaId == null) return;
+
+        String titulo = JOptionPane.showInputDialog("Título del libro:");
+        if (titulo == null) return;
+
+        String resultado = tituloService.crearTitulo(propuestaId, titulo);
+        JOptionPane.showMessageDialog(null, resultado);
     }
 }

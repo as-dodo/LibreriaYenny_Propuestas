@@ -1,35 +1,32 @@
 package bll.titulos;
 
 public class Titulo {
-    private String id;
+    private Integer id;
+    private int propuestaId;
     private String titulo;
-    private String autor;
-    private String descripcionCorta;
     private EstadoComercializacion estadoComercializacion;
 
-    public Titulo(String id,
-                  String titulo,
-                  String autor,
-                  String descripcionCorta,
-                  EstadoComercializacion estadoComercializacion) {
+    public Titulo(Integer id, int propuestaId, String titulo, EstadoComercializacion estadoComercializacion) {
         this.id = id;
+        this.propuestaId = propuestaId;
         this.titulo = titulo;
-        this.autor = autor;
-        this.descripcionCorta = descripcionCorta;
         this.estadoComercializacion = estadoComercializacion;
     }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public Titulo(int propuestaId, String titulo, EstadoComercializacion estadoComercializacion) {
+        this.propuestaId = propuestaId;
+        this.titulo = titulo;
+        this.estadoComercializacion = estadoComercializacion;
+    }
+
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
+
+    public int getPropuestaId() { return propuestaId; }
+    public void setPropuestaId(int propuestaId) { this.propuestaId = propuestaId; }
 
     public String getTitulo() { return titulo; }
     public void setTitulo(String titulo) { this.titulo = titulo; }
-
-    public String getAutor() { return autor; }
-    public void setAutor(String autor) { this.autor = autor; }
-
-    public String getDescripcionCorta() { return descripcionCorta; }
-    public void setDescripcionCorta(String descripcionCorta) { this.descripcionCorta = descripcionCorta; }
 
     public EstadoComercializacion getEstadoComercializacion() { return estadoComercializacion; }
     public void setEstadoComercializacion(EstadoComercializacion estadoComercializacion) {
