@@ -19,7 +19,7 @@ public class MenuEditor implements Menu {
     public void run() {
         String[] opciones = {
                 "Ver bandeja de propuestas",
-                "Revisar propuesta (ver / aprobar / rechazar / comentar)",
+                "Revisar propuesta",
                 "Definir condiciones de publicación",
                 "Crear título desde propuesta aprobada",
                 "Salir"
