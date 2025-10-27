@@ -14,6 +14,7 @@ public class MenuAdmin implements Menu {
                 "Modificar usuario",
                 "Eliminar usuario",
                 "Asignar rol",
+                "Ver reportes",
                 "Salir"
         };
 
@@ -29,13 +30,14 @@ public class MenuAdmin implements Menu {
                     opciones[0]
             );
 
-            if (opcion == JOptionPane.CLOSED_OPTION || opcion == 4) break;
+            if (opcion == JOptionPane.CLOSED_OPTION || opcion == 5) break;
 
             switch (opcion) {
                 case 0 -> crearUsuario();
-                case 1 -> JOptionPane.showMessageDialog(null, "Modificar usuario");
-                case 2 -> JOptionPane.showMessageDialog(null, "Eliminar usuario");
+                case 1 -> modificarUsuario();
+                case 2 -> eliminarUsuario();
                 case 3 -> asignarRol();
+                case 4 -> verReportes();
                 default -> {}
             }
         }
@@ -84,5 +86,41 @@ public class MenuAdmin implements Menu {
 
         String resultado = adminService.asignarRol(email, nuevoRol);
         JOptionPane.showMessageDialog(null, resultado);
+    }
+    private void modificarUsuario() {
+        String emailActual = JOptionPane.showInputDialog("Email del usuario a modificar:");
+        if (emailActual == null) return;
+
+        String nuevoNombre = JOptionPane.showInputDialog("Nuevo nombre:");
+        if (nuevoNombre == null) return;
+
+        String nuevoEmail = JOptionPane.showInputDialog("Nuevo email:");
+        if (nuevoEmail == null) return;
+
+        String resultado = adminService.modificarUsuario(emailActual, nuevoNombre, nuevoEmail);
+        JOptionPane.showMessageDialog(null, resultado);
+    }
+
+    private void eliminarUsuario() {
+        String email = JOptionPane.showInputDialog("Email del usuario a eliminar:");
+        if (email == null) return;
+
+        int confirmacion = JOptionPane.showConfirmDialog(
+                null,
+                "¿Estás seguro de que deseas eliminar el usuario con email: " + email + "?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            String resultado = adminService.eliminarUsuario(email);
+            JOptionPane.showMessageDialog(null, resultado);
+        }
+    }
+
+    private void verReportes() {
+        MenuReporte menuReporte = new MenuReporte();
+        menuReporte.mostrarMenu();
     }
 }
