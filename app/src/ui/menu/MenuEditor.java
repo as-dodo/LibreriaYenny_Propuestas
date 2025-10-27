@@ -22,6 +22,7 @@ public class MenuEditor implements Menu {
                 "Revisar propuesta",
                 "Definir condiciones de publicación",
                 "Crear título desde propuesta aprobada",
+                "Ver reportes",
                 "Salir"
         };
 
@@ -37,13 +38,14 @@ public class MenuEditor implements Menu {
                     opciones[0]
             );
 
-            if (opcion == 4 || opcion == JOptionPane.CLOSED_OPTION) break;
+            if (opcion == 5 || opcion == JOptionPane.CLOSED_OPTION) break;
 
             switch (opcion) {
                 case 0 -> verBandeja();
                 case 1 -> revisarPropuesta();
                 case 2 -> definirCondiciones();
                 case 3 -> crearTitulo();
+                case 4 -> verReportes();
                 default -> {}
             }
         }
@@ -124,5 +126,9 @@ public class MenuEditor implements Menu {
 
         String resultado = tituloService.crearTitulo(propuestaId, titulo);
         JOptionPane.showMessageDialog(null, resultado);
+    }
+    private void verReportes() {
+        MenuReporte menuReporte = new MenuReporte();
+        menuReporte.mostrarMenu();
     }
 }
