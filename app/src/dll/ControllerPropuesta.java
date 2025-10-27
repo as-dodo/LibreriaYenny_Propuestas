@@ -1,24 +1,24 @@
 package dll;
 
 import bll.propuestas.EstadoPropuesta;
-
+import bll.propuestas.Propuesta;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ControllerPropuesta {
 
-    public boolean insertarPropuesta(Connection cn, int escritorId, String titulo, String resumen, String archivoUrl) throws SQLException {
+    public boolean insertarPropuesta(Connection cn, Propuesta propuesta) throws SQLException {
         String sql = """
                 INSERT INTO propuestas (escritor_id, titulo_propuesto, resumen, archivo_url, estado)
                 VALUES (?,?,?,?,?)
                 """;
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
-            ps.setInt(1, escritorId);
-            ps.setString(2, titulo);
-            ps.setString(3, resumen);
-            ps.setString(4, archivoUrl);
-            ps.setString(5, EstadoPropuesta.ENVIADA.name());
+            ps.setInt(1, propuesta.getEscritorId());
+            ps.setString(2, propuesta.getTituloPropuesto());
+            ps.setString(3, propuesta.getResumen());
+            ps.setString(4, propuesta.getArchivoUrl());
+            ps.setString(5, propuesta.getEstado().name());
             return ps.executeUpdate() > 0;
         }
     }
@@ -69,7 +69,7 @@ public class ControllerPropuesta {
         }
     }
 
-    public boolean actualizarEstado(Connection cn, int propuestaId, EstadoPropuesta nuevoEstado) throws SQLException {
+    public boolean actualizarEstado(Connection cn, Propuesta propuesta) throws SQLException {
         String sql = """
                 UPDATE propuestas
                 SET estado = ?, fecha_decision = CASE
@@ -79,9 +79,9 @@ public class ControllerPropuesta {
                 WHERE id = ?
                 """;
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
-            ps.setString(1, nuevoEstado.name());
-            ps.setString(2, nuevoEstado.name());
-            ps.setInt(3, propuestaId);
+            ps.setString(1, propuesta.getEstado().name());
+            ps.setString(2, propuesta.getEstado().name());
+            ps.setInt(3, propuesta.getId());
             return ps.executeUpdate() > 0;
         }
     }
@@ -164,6 +164,35 @@ public class ControllerPropuesta {
             ps.setInt(2, usuarioId);
             ps.setString(3, comentario.trim());
             return ps.executeUpdate() > 0;
+        }
+    }
+
+    public Propuesta obtenerPorId(Connection cn, int propuestaId) throws SQLException {
+        String sql = """
+            SELECT id, escritor_id, titulo_propuesto, resumen, archivo_url, estado, fecha_creacion, fecha_decision
+            FROM propuestas
+            WHERE id = ?
+            """;
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, propuestaId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) return null;
+
+                EstadoPropuesta estado = EstadoPropuesta.valueOf(rs.getString("estado"));
+                Timestamp tsCreacion = rs.getTimestamp("fecha_creacion");
+                Timestamp tsDecision = rs.getTimestamp("fecha_decision");
+
+                return new Propuesta(
+                        rs.getInt("id"),
+                        rs.getInt("escritor_id"),
+                        rs.getString("titulo_propuesto"),
+                        rs.getString("resumen"),
+                        rs.getString("archivo_url"),
+                        estado,
+                        tsCreacion != null ? tsCreacion.toLocalDateTime() : null,
+                        tsDecision != null ? tsDecision.toLocalDateTime() : null
+                );
+            }
         }
     }
 }
