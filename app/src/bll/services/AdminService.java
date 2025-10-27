@@ -1,5 +1,6 @@
 package bll.services;
 
+import bll.eventos.AccionEvento;
 import bll.usuarios.*;
 import dll.Conexion;
 import dll.ControllerUsuario;
@@ -8,6 +9,8 @@ import repository.HashUtil;
 import repository.Validaciones;
 
 public class AdminService {
+
+    private final HistoriaService historiaService = new HistoriaService();
 
     public String crearUsuario(String nombre, String email, String password, String rolStr) {
         if (Validaciones.isBlank(nombre) || Validaciones.isBlank(email) || Validaciones.isBlank(password)) {
@@ -49,6 +52,11 @@ public class AdminService {
             boolean creado = ctrl.insertarUsuario(cn, usuario, hash);
 
             if (creado) {
+                try {
+                    historiaService.registrarEvento(null, null, AccionEvento.CREAR_USUARIO, 
+                        "Usuario creado: " + email.trim() + " con rol " + rol);
+                } catch (Exception ignored) {
+                }
                 return "Usuario creado correctamente con rol " + rol;
             } else {
                 return "Error al crear el usuario";
@@ -98,9 +106,99 @@ public class AdminService {
             boolean actualizado = ctrl.actualizarRol(cn, usuario);
 
             if (actualizado) {
+                try {
+                    historiaService.registrarEvento(null, null, AccionEvento.ASIGNAR_ROL, 
+                        "Rol actualizado para " + email.trim() + " a " + nuevoRol);
+                } catch (Exception ignored) {
+                }
                 return "Rol actualizado correctamente a " + nuevoRol;
             } else {
                 return "Error al actualizar el rol";
+            }
+
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    public String modificarUsuario(String email, String nuevoNombre, String nuevoEmail) {
+        if (Validaciones.isBlank(email)) {
+            return "Email actual es obligatorio";
+        }
+
+        if (Validaciones.isBlank(nuevoNombre)) {
+            return "Nuevo nombre es obligatorio";
+        }
+
+        if (Validaciones.isBlank(nuevoEmail) || !Validaciones.emailValido(nuevoEmail)) {
+            return "Nuevo email inválido";
+        }
+
+        ControllerUsuario ctrl = new ControllerUsuario();
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) {
+                return "No hay conexión a la base de datos";
+            }
+
+            Usuario usuario = ctrl.obtenerUsuarioPorEmail(cn, email.trim());
+            if (usuario == null) {
+                return "Usuario no encontrado";
+            }
+
+            if (!email.trim().equals(nuevoEmail.trim())) {
+                if (ctrl.emailExiste(cn, nuevoEmail.trim())) {
+                    return "El nuevo email ya está registrado";
+                }
+            }
+
+            usuario.setNombre(nuevoNombre.trim());
+            usuario.setEmail(nuevoEmail.trim());
+
+            boolean actualizado = ctrl.actualizarUsuario(cn, usuario);
+
+            if (actualizado) {
+                try {
+                    historiaService.registrarEvento(null, null, AccionEvento.MODIFICAR_USUARIO, 
+                        "Usuario modificado: " + email.trim() + " -> " + nuevoEmail.trim());
+                } catch (Exception ignored) {
+                }
+                return "Usuario modificado correctamente";
+            } else {
+                return "Error al modificar el usuario";
+            }
+
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+    public String eliminarUsuario(String email) {
+        if (Validaciones.isBlank(email) || !Validaciones.emailValido(email)) {
+            return "Email inválido";
+        }
+
+        ControllerUsuario ctrl = new ControllerUsuario();
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) {
+                return "No hay conexión a la base de datos";
+            }
+
+            Usuario usuario = ctrl.obtenerUsuarioPorEmail(cn, email.trim());
+            if (usuario == null) {
+                return "Usuario no encontrado";
+            }
+
+            boolean eliminado = ctrl.eliminarUsuario(cn, usuario.getId());
+
+            if (eliminado) {
+                try {
+                    historiaService.registrarEvento(null, null, AccionEvento.ELIMINAR_USUARIO, 
+                        "Usuario eliminado: " + email.trim());
+                } catch (Exception ignored) {
+                }
+                return "Usuario eliminado correctamente";
+            } else {
+                return "Error al eliminar el usuario";
             }
 
         } catch (Exception e) {

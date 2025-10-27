@@ -84,4 +84,44 @@ public class ControllerUsuario {
         }
     }
 
+    public boolean actualizarUsuario(Connection cn, Usuario usuario) throws SQLException {
+        String sql = "UPDATE usuarios SET nombre = ?, email = ? WHERE id = ?";
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, usuario.getNombre());
+            ps.setString(2, usuario.getEmail());
+            ps.setString(3, usuario.getId());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean eliminarUsuario(Connection cn, String userId) throws SQLException {
+        String sql = "DELETE FROM usuarios WHERE id = ?";
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public Usuario obtenerUsuarioPorId(Connection cn, String userId) throws SQLException {
+        String sql = "SELECT id, nombre, email, rol FROM usuarios WHERE id = ? LIMIT 1";
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setString(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String rol = rs.getString("rol");
+                    String id = String.valueOf(rs.getLong("id"));
+                    String nombre = rs.getString("nombre");
+                    String correo = rs.getString("email");
+
+                    return switch (rol) {
+                        case "EDITOR" -> new Editor(id, nombre, correo);
+                        case "ADMIN" -> new Admin(id, nombre, correo);
+                        default -> new Escritor(id, nombre, correo);
+                    };
+                }
+            }
+        }
+        return null;
+    }
+
 }

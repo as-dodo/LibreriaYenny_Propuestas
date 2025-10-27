@@ -21,7 +21,10 @@ public class MenuEditor implements Menu {
                 "Ver bandeja de propuestas",
                 "Revisar propuesta",
                 "Definir condiciones de publicación",
-                "Crear título desde propuesta aprobada",
+                "Crear título",
+                "Ver títulos",
+                "Transferir título a Marketing/Ventas",
+                "Actualizar estado de comercialización",
                 "Ver reportes",
                 "Salir"
         };
@@ -38,14 +41,17 @@ public class MenuEditor implements Menu {
                     opciones[0]
             );
 
-            if (opcion == 5 || opcion == JOptionPane.CLOSED_OPTION) break;
+            if (opcion == 8 || opcion == JOptionPane.CLOSED_OPTION) break;
 
             switch (opcion) {
                 case 0 -> verBandeja();
                 case 1 -> revisarPropuesta();
                 case 2 -> definirCondiciones();
                 case 3 -> crearTitulo();
-                case 4 -> verReportes();
+                case 4 -> verTitulos();
+                case 5 -> transferirAMarketing();
+                case 6 -> actualizarEstadoComercializacion();
+                case 7 -> verReportes();
                 default -> {}
             }
         }
@@ -127,6 +133,59 @@ public class MenuEditor implements Menu {
         String resultado = tituloService.crearTitulo(propuestaId, titulo);
         JOptionPane.showMessageDialog(null, resultado);
     }
+
+    private void verTitulos() {
+        String listado = tituloService.listarTitulos();
+        JTextArea ta = new JTextArea(listado, 15, 70);
+        ta.setEditable(false);
+        JOptionPane.showMessageDialog(null, new JScrollPane(ta), "Títulos", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void transferirAMarketing() {
+        String tituloId = JOptionPane.showInputDialog("ID del título a transferir:");
+        if (tituloId == null) return;
+
+        int confirmacion = JOptionPane.showConfirmDialog(
+                null,
+                "¿Confirmar transferencia del título #" + tituloId + " a Marketing/Ventas?",
+                "Confirmar transferencia",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE
+        );
+
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            String resultado = tituloService.transferirAMarketing(tituloId);
+            JOptionPane.showMessageDialog(null, resultado);
+        }
+    }
+
+    private void actualizarEstadoComercializacion() {
+        String tituloId = JOptionPane.showInputDialog("ID del título:");
+        if (tituloId == null) return;
+
+        String[] estados = {
+                "EN_PREPARACION",
+                "EN_PROMOCION",
+                "DISPONIBLE",
+                "AGOTADO"
+        };
+
+        String nuevoEstado = (String) JOptionPane.showInputDialog(
+                null,
+                "Selecciona el nuevo estado de comercialización:",
+                "Actualizar Estado",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                estados,
+                estados[0]
+        );
+
+        if (nuevoEstado != null) {
+            String resultado = tituloService.actualizarEstadoComercializacion(tituloId, nuevoEstado);
+            JOptionPane.showMessageDialog(null, resultado);
+        }
+    }
+
     private void verReportes() {
         MenuReporte menuReporte = new MenuReporte();
         menuReporte.mostrarMenu();
