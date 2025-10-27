@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public class Propuesta {
     private int id;
+    private int escritorId;
     private String tituloPropuesto;
     private String resumen;
     private String archivoUrl;
@@ -12,6 +13,7 @@ public class Propuesta {
     private LocalDateTime fechaDecision;
 
     public Propuesta(int id,
+                     int escritorId,
                      String tituloPropuesto,
                      String resumen,
                      String archivoUrl,
@@ -19,6 +21,7 @@ public class Propuesta {
                      LocalDateTime fechaCreacion,
                      LocalDateTime fechaDecision) {
         this.id = id;
+        this.escritorId = escritorId;
         this.tituloPropuesto = tituloPropuesto;
         this.resumen = resumen;
         this.archivoUrl = archivoUrl;
@@ -27,9 +30,23 @@ public class Propuesta {
         this.fechaDecision = fechaDecision;
     }
 
+    public Propuesta(int escritorId,
+                     String tituloPropuesto,
+                     String resumen,
+                     String archivoUrl) {
+        this.escritorId = escritorId;
+        this.tituloPropuesto = tituloPropuesto;
+        this.resumen = resumen;
+        this.archivoUrl = archivoUrl;
+        this.estado = EstadoPropuesta.ENVIADA;
+    }
+
     // getters / setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+
+    public int getEscritorId() { return escritorId; }
+    public void setEscritorId(int escritorId) { this.escritorId = escritorId; }
 
     public String getTituloPropuesto() { return tituloPropuesto; }
     public void setTituloPropuesto(String tituloPropuesto) { this.tituloPropuesto = tituloPropuesto; }

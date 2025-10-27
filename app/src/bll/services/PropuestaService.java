@@ -1,15 +1,18 @@
 package bll.services;
 
+import bll.eventos.AccionEvento;
 import bll.propuestas.EstadoPropuesta;
+import bll.propuestas.Propuesta;
 import dll.Conexion;
 import dll.ControllerPropuesta;
-import repository.Validaciones;
-
 import java.sql.Connection;
 import java.util.List;
 import java.util.stream.Collectors;
+import repository.Validaciones;
 
 public class PropuestaService {
+
+    private final HistoriaService historiaService = new HistoriaService();
 
     public String enviarPropuesta(String escritorId, String titulo, String resumen, String enlace) {
 
@@ -18,19 +21,29 @@ public class PropuestaService {
         if (Validaciones.isBlank(resumen)) return "Resumen obligatorio";
         if (enlace != null && enlace.length() > 500) return "Enlace demasiado largo";
 
+        int idEscritor = Integer.parseInt(escritorId.trim());
+        String archivoUrl = Validaciones.linkOrNull(enlace);
+
+        Propuesta propuesta = new Propuesta(
+                idEscritor,
+                titulo.trim(),
+                resumen.trim(),
+                archivoUrl
+        );
+
         ControllerPropuesta ctrl = new ControllerPropuesta();
 
         try (Connection cn = Conexion.getInstance().getConnection()) {
             if (cn == null) return "No hay conexión a la base de datos";
-            boolean resultado = ctrl.insertarPropuesta(
-                    cn,
-                   Integer.parseInt(escritorId),
-                    titulo.trim(),
-                    resumen.trim(),
-                    Validaciones.linkOrNull(enlace)
-            );
+
+            boolean resultado = ctrl.insertarPropuesta(cn, propuesta);
 
             if (resultado) {
+                try {
+                    historiaService.registrarEvento(null, idEscritor, AccionEvento.ENVIAR_PROPUESTA,
+                            "Propuesta enviada: " + titulo.trim());
+                } catch (Exception ignored) {
+                }
                 return "Propuesta enviada";
             }
 
@@ -65,15 +78,38 @@ public class PropuestaService {
         }
     }
 
-    public String aprobar(String propuestaId) { return decidir(propuestaId, EstadoPropuesta.APROBADA); }
-    public String rechazar(String propuestaId) { return decidir(propuestaId, EstadoPropuesta.RECHAZADA); }
+    public String aprobar(String propuestaId) { return decidir(propuestaId, EstadoPropuesta.APROBADA, null); }
+    public String aprobar(String propuestaId, Integer editorId) { return decidir(propuestaId, EstadoPropuesta.APROBADA, editorId); }
+    public String rechazar(String propuestaId) { return decidir(propuestaId, EstadoPropuesta.RECHAZADA, null); }
+    public String rechazar(String propuestaId, Integer editorId) { return decidir(propuestaId, EstadoPropuesta.RECHAZADA, editorId); }
 
-    private String decidir(String propuestaId, EstadoPropuesta estado) {
+    private String decidir(String propuestaId, EstadoPropuesta estado, Integer editorId) {
         if (Validaciones.isBlank(propuestaId) || !Validaciones.esNumero(propuestaId)) return "ID inválido";
+
+        int idPropuesta = Integer.parseInt(propuestaId.trim());
+
         ControllerPropuesta ctrl = new ControllerPropuesta();
         try (Connection cn = Conexion.getInstance().getConnection()) {
             if (cn == null) return "No hay conexión a la base de datos";
-            boolean ok = ctrl.actualizarEstado(cn, Integer.parseInt(propuestaId), estado);
+
+            Propuesta propuesta = ctrl.obtenerPorId(cn, idPropuesta);
+            if (propuesta == null) {
+                return "Propuesta no encontrada";
+            }
+
+            propuesta.setEstado(estado);
+            boolean ok = ctrl.actualizarEstado(cn, propuesta);
+
+            if (ok) {
+                try {
+                    AccionEvento accion = estado == EstadoPropuesta.APROBADA ?
+                            AccionEvento.APROBAR_PROPUESTA : AccionEvento.RECHAZAR_PROPUESTA;
+                    historiaService.registrarEvento(idPropuesta, editorId, accion,
+                            "Propuesta " + estado.name().toLowerCase());
+                } catch (Exception ignored) {
+                }
+            }
+
             return ok ? ("Propuesta " + estado.name().toLowerCase()) : "No se pudo actualizar el estado";
         } catch (Exception e) {
             return "Error: " + e.getMessage();
@@ -97,9 +133,20 @@ public class PropuestaService {
         if (usuarioId <= 0) return "Usuario inválido";
         if (Validaciones.isBlank(comentario)) return "Comentario vacío";
 
+        int idPropuesta = Integer.parseInt(propuestaId.trim());
+
         ControllerPropuesta ctrl = new ControllerPropuesta();
         try (Connection cn = Conexion.getInstance().getConnection()) {
-            boolean ok = ctrl.agregarComentario(cn, Integer.parseInt(propuestaId), usuarioId, comentario);
+            boolean ok = ctrl.agregarComentario(cn, idPropuesta, usuarioId, comentario);
+
+            if (ok) {
+                try {
+                    historiaService.registrarEvento(idPropuesta, usuarioId, AccionEvento.AGREGAR_COMENTARIO,
+                            "Comentario agregado");
+                } catch (Exception ignored) {
+                }
+            }
+
             return ok ? "Comentario agregado" : "No se pudo agregar el comentario";
         } catch (Exception e) {
             return "Error: " + e.getMessage();
