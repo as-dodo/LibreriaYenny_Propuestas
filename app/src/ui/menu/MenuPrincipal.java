@@ -30,10 +30,14 @@ public class MenuPrincipal implements Menu {
 
             switch (opcion) {
                 case 0 -> {
-                    String email = JOptionPane.showInputDialog("Email:");
-                    if (email == null) break;
-                    String pass  = JOptionPane.showInputDialog("Contraseña:");
-                    if (pass == null) break;
+                    LoginDialog dlg = new LoginDialog(null);
+                    dlg.setVisible(true);
+
+                    String email = dlg.getEmail();
+                    String pass = dlg.getPassword();
+
+                    if (email == null || pass == null) break;
+
                     Usuario usuario = auth.autenticar(email, pass);
                     if (usuario == null) {
                         JOptionPane.showMessageDialog(null, "Email o contraseña incorrectos.");
