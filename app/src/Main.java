@@ -1,5 +1,7 @@
 import dll.Conexion;
 import ui.menu.MenuPrincipal;
+import ui.menu.StartForm;
+import javax.swing.*;
 import java.sql.Connection;
 
 public class Main {
@@ -8,7 +10,9 @@ public class Main {
         if (conexion != null) {
             System.out.println("Conexión lista para usar!");
         }
-        MenuPrincipal start = new MenuPrincipal();
-        start.run();
+        SwingUtilities.invokeLater(StartForm::new);
+
+//        MenuPrincipal start = new MenuPrincipal();
+//        start.run();
     }
 }

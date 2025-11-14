@@ -6,6 +6,8 @@ import bll.propuestas.Propuesta;
 import dll.Conexion;
 import dll.ControllerPropuesta;
 import java.sql.Connection;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import repository.Validaciones;
@@ -152,5 +154,27 @@ public class PropuestaService {
             return "Error: " + e.getMessage();
         }
     }
+
+    public List<Propuesta> obtenerPorEscritor(String escritorId) {
+        List<Propuesta> propuestas = new ArrayList<>();
+
+        if (Validaciones.isBlank(escritorId) || !Validaciones.esNumero(escritorId))
+            return propuestas;
+
+        int id = Integer.parseInt(escritorId.trim());
+        ControllerPropuesta ctrl = new ControllerPropuesta();
+
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) return propuestas;
+
+            return ctrl.listarObjetosPorEscritor(cn, id);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return propuestas;
+        }
+    }
+
+
 }
 

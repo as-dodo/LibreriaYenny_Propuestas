@@ -195,5 +195,45 @@ public class ControllerPropuesta {
             }
         }
     }
+    public List<Propuesta> listarObjetosPorEscritor(Connection cn, int escritorId) throws SQLException {
+        String sql = """
+            SELECT id, escritor_id, titulo_propuesto, resumen, archivo_url,
+                   estado, fecha_creacion, fecha_decision
+            FROM propuestas
+            WHERE escritor_id = ?
+            ORDER BY fecha_creacion DESC
+            """;
+
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, escritorId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                List<Propuesta> lista = new ArrayList<>();
+
+                while (rs.next()) {
+                    EstadoPropuesta estado = EstadoPropuesta.valueOf(rs.getString("estado"));
+
+                    Timestamp tsCreacion = rs.getTimestamp("fecha_creacion");
+                    Timestamp tsDecision = rs.getTimestamp("fecha_decision");
+
+                    Propuesta p = new Propuesta(
+                            rs.getInt("id"),
+                            rs.getInt("escritor_id"),
+                            rs.getString("titulo_propuesto"),
+                            rs.getString("resumen"),
+                            rs.getString("archivo_url"),
+                            estado,
+                            tsCreacion != null ? tsCreacion.toLocalDateTime() : null,
+                            tsDecision != null ? tsDecision.toLocalDateTime() : null
+                    );
+
+                    lista.add(p);
+                }
+
+                return lista;
+            }
+        }
+    }
+
 }
 
