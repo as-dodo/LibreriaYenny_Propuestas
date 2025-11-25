@@ -2,6 +2,7 @@ package ui.menu;
 
 import bll.services.AuthService;
 import bll.usuarios.Escritor;
+import bll.usuarios.Editor;
 import bll.usuarios.Usuario;
 
 import javax.swing.*;
@@ -25,7 +26,7 @@ public class StartForm extends JFrame {
         lblLogo.setIcon(new ImageIcon(scaled));
 
         setTitle("Yenny - Inicio");
-        setSize(500, 300);
+        setSize(600, 400);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -59,11 +60,17 @@ public class StartForm extends JFrame {
 
                 switch (usuario.getRol()) {
 //                    case ESCRITOR -> new MenuEscritor((Escritor) usuario).run();
+//                    case EDITOR   -> new MenuEditor(usuario).run();
                     case ESCRITOR -> {
                         dispose();
                         new EscritorForm((Escritor) usuario);
                     }
-                    case EDITOR   -> new MenuEditor(usuario).run();
+                    case EDITOR   -> {
+                        dispose();
+                        new EditorForm();
+                    }
+
+
                     case ADMIN    -> new MenuAdmin().run();
                     default       -> {}
                 }

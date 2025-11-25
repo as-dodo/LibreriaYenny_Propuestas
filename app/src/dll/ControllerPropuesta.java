@@ -2,7 +2,10 @@ package dll;
 
 import bll.propuestas.EstadoPropuesta;
 import bll.propuestas.Propuesta;
+import bll.views.PropuestaEditorView;
+
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -234,6 +237,46 @@ public class ControllerPropuesta {
             }
         }
     }
+
+    public List<PropuestaEditorView> listarParaEditor(Connection cn) throws SQLException {
+        String sql = """
+            SELECT  p.id,
+                    u.nombre AS autor,
+                    p.titulo_propuesto,
+                    p.resumen,
+                    p.estado,
+                    p.fecha_creacion
+            FROM propuestas p
+            JOIN usuarios u ON u.id = p.escritor_id
+            WHERE p.estado IN ('ENVIADA', 'EN_REVISION')
+            ORDER BY p.fecha_creacion ASC
+            """;
+
+        try (PreparedStatement ps = cn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            List<PropuestaEditorView> filas = new ArrayList<>();
+
+            while (rs.next()) {
+                EstadoPropuesta estado = EstadoPropuesta.valueOf(rs.getString("estado"));
+                Timestamp ts = rs.getTimestamp("fecha_creacion");
+                LocalDateTime fecha = ts != null ? ts.toLocalDateTime() : null;
+
+                PropuestaEditorView view = new PropuestaEditorView(
+                        rs.getInt("id"),
+                        rs.getString("autor"),
+                        rs.getString("titulo_propuesto"),
+                        rs.getString("resumen"),
+                        estado,
+                        fecha
+                );
+                filas.add(view);
+            }
+
+            return filas;
+        }
+    }
+
 
 }
 

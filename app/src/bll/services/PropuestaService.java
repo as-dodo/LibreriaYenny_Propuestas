@@ -3,11 +3,13 @@ package bll.services;
 import bll.eventos.AccionEvento;
 import bll.propuestas.EstadoPropuesta;
 import bll.propuestas.Propuesta;
+import bll.views.PropuestaEditorView;
 import dll.Conexion;
 import dll.ControllerPropuesta;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import repository.Validaciones;
@@ -174,6 +176,21 @@ public class PropuestaService {
             return propuestas;
         }
     }
+
+    public List<PropuestaEditorView> obtenerPorEditor() {
+        ControllerPropuesta ctrl = new ControllerPropuesta();
+
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) {
+                return Collections.emptyList();
+            }
+
+            return ctrl.listarParaEditor(cn);
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
+
 
 
 }

@@ -10,6 +10,10 @@ public class Main {
         if (conexion != null) {
             System.out.println("Conexión lista para usar!");
         }
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception ignored) {}
+
         SwingUtilities.invokeLater(StartForm::new);
 
 //        MenuPrincipal start = new MenuPrincipal();
