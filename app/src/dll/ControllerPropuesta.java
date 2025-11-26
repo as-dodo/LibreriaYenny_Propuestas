@@ -245,7 +245,8 @@ public class ControllerPropuesta {
                     p.titulo_propuesto,
                     p.resumen,
                     p.estado,
-                    p.fecha_creacion
+                    p.fecha_creacion,
+                    p.archivo_url
             FROM propuestas p
             JOIN usuarios u ON u.id = p.escritor_id
             WHERE p.estado IN ('ENVIADA', 'EN_REVISION')
@@ -268,7 +269,8 @@ public class ControllerPropuesta {
                         rs.getString("titulo_propuesto"),
                         rs.getString("resumen"),
                         estado,
-                        fecha
+                        fecha,
+                        rs.getString("archivo_url")
                 );
                 filas.add(view);
             }

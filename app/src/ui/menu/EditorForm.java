@@ -103,7 +103,6 @@ public class EditorForm extends JFrame{
 
         volverButton.addActionListener(e -> showMenu());
 
-        // по умолчанию открыть первую вкладку "Mis Propuestas"
         if (tabPropuestas != null) {
             tabPropuestas.setSelectedIndex(0);
         }
@@ -114,7 +113,7 @@ public class EditorForm extends JFrame{
     private void inicializarTablasEditor() {
 
         DefaultTableModel bandejaModel = new DefaultTableModel(
-                new Object[]{"Autor", "Título", "Resumen", "Estado", "Fecha"}, 0
+                new Object[]{"Autor", "Título", "Resumen", "Estado", "Fecha", "Archivo"}, 0
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -125,7 +124,7 @@ public class EditorForm extends JFrame{
         tblBandejaPropuestas.setRowHeight(26);
 
         DefaultTableModel misModel = new DefaultTableModel(
-                new Object[]{"Autor", "Título", "Resumen", "Estado", "Fecha"}, 0
+                new Object[]{"Autor", "Título", "Resumen", "Estado", "Fecha", "Archivo"}, 0
         ) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -138,7 +137,7 @@ public class EditorForm extends JFrame{
 
     private void cargarBandeja() {
         DefaultTableModel model = (DefaultTableModel) tblBandejaPropuestas.getModel();
-        model.setRowCount(0); // очистить
+        model.setRowCount(0);
 
         var propuestas = propuestaService.obtenerPorEditor();
         for (var p : propuestas) {
@@ -147,10 +146,13 @@ public class EditorForm extends JFrame{
                     p.getTitulo(),
                     p.getResumen(),
                     p.getEstado(),
-                    p.getFechaCreacion()
+                    p.getFechaCreacion(),
+                    p.getArchivoUrl()
             });
         }
     }
+
+
     private void showMenu() {
         CardLayout cl = (CardLayout) rootPanel.getLayout();
         cl.show(rootPanel, "menu");
@@ -164,9 +166,8 @@ public class EditorForm extends JFrame{
     private void revisarSeleccionada() {
         if (tabPropuestas == null) return;
 
-        int tabIndex = tabPropuestas.getSelectedIndex();
-        JTable tablaActual = (tabIndex == 0) ? tblMisPropuestas : tblBandejaPropuestas;
-
+        int idx = tabPropuestas.getSelectedIndex();
+        JTable tablaActual = (idx == 0) ? tblMisPropuestas : tblBandejaPropuestas;
         if (tablaActual == null) return;
 
         int fila = tablaActual.getSelectedRow();
@@ -180,16 +181,24 @@ public class EditorForm extends JFrame{
             return;
         }
 
-        Object valor = tablaActual.getValueAt(fila, 0);
-        String texto = (valor != null) ? valor.toString() : "(sin título)";
+        String autor   = String.valueOf(tablaActual.getValueAt(fila, 0));
+        String titulo  = String.valueOf(tablaActual.getValueAt(fila, 1));
+        String resumen = String.valueOf(tablaActual.getValueAt(fila, 2));
+        String estado  = String.valueOf(tablaActual.getValueAt(fila, 3));
+        String fecha   = String.valueOf(tablaActual.getValueAt(fila, 4));
+        String archivo = String.valueOf(tablaActual.getValueAt(fila, 5));
 
-
-        JOptionPane.showMessageDialog(
+        RevisarPropuestaDialog dlg = new RevisarPropuestaDialog(
                 this,
-                "Aquí se abrirá la revisión de la propuesta:\n" + texto,
-                "Revisar propuesta",
-                JOptionPane.INFORMATION_MESSAGE
+                autor,
+                titulo,
+                resumen,
+                estado,
+                fecha,
+                archivo
         );
+        dlg.setVisible(true);
     }
+
 }
 
