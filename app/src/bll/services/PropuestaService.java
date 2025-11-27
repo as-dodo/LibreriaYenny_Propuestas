@@ -3,9 +3,12 @@ package bll.services;
 import bll.eventos.AccionEvento;
 import bll.propuestas.EstadoPropuesta;
 import bll.propuestas.Propuesta;
+import bll.views.PropuestaEditorView;
 import dll.Conexion;
 import dll.ControllerPropuesta;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import repository.Validaciones;
@@ -98,6 +101,7 @@ public class PropuestaService {
             }
 
             propuesta.setEstado(estado);
+            propuesta.setEditorId(editorId);
             boolean ok = ctrl.actualizarEstado(cn, propuesta);
 
             if (ok) {
@@ -152,5 +156,82 @@ public class PropuestaService {
             return "Error: " + e.getMessage();
         }
     }
-}
 
+    public List<Propuesta> obtenerPorEscritor(String escritorId) {
+        List<Propuesta> propuestas = new ArrayList<>();
+
+        if (Validaciones.isBlank(escritorId) || !Validaciones.esNumero(escritorId))
+            return propuestas;
+
+        int id = Integer.parseInt(escritorId.trim());
+        ControllerPropuesta ctrl = new ControllerPropuesta();
+
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) return propuestas;
+
+            return ctrl.listarObjetosPorEscritor(cn, id);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return propuestas;
+        }
+    }
+
+    public List<PropuestaEditorView> obtenerPorEditor() {
+        ControllerPropuesta ctrl = new ControllerPropuesta();
+
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) {
+                return Collections.emptyList();
+            }
+
+            return ctrl.listarParaEditor(cn);
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
+
+    public List<PropuestaEditorView> obtenerPorEditor(String editorId) {
+        List<PropuestaEditorView> propuestas = new ArrayList<>();
+
+        if (Validaciones.isBlank(editorId) || !Validaciones.esNumero(editorId)) {
+            return propuestas;
+        }
+
+        int id = Integer.parseInt(editorId.trim());
+        ControllerPropuesta ctrl = new ControllerPropuesta();
+
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) {
+                return propuestas;
+            }
+
+            return ctrl.listarPorEditor(cn, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return propuestas;
+        }
+    }
+
+    public String asignarAEditor(String propuestaId, int editorId) {
+        if (Validaciones.isBlank(propuestaId) || !Validaciones.esNumero(propuestaId)) {
+            return "ID invalido";
+        }
+        if (editorId <= 0) return "Editor invalido";
+
+        int idPropuesta = Integer.parseInt(propuestaId.trim());
+        ControllerPropuesta ctrl = new ControllerPropuesta();
+
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) return "No hay conexion a la base de datos";
+
+            boolean asignado = ctrl.asignarEditor(cn, idPropuesta, editorId);
+            return asignado ? "Propuesta asignada al editor" : "La propuesta ya tiene editor";
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+
+
+}
