@@ -230,4 +230,14 @@ public class TituloService {
             return "Error: " + e.getMessage();
         }
     }
+
+    public java.util.List<Titulo> obtenerTodosTitulos() {
+        ControllerTitulo ctrl = new ControllerTitulo();
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) return new java.util.ArrayList<>();
+            return ctrl.obtenerTodos(cn);
+        } catch (Exception e) {
+            return new java.util.ArrayList<>();
+        }
+    }
 }

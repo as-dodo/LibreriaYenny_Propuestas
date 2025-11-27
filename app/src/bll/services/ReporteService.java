@@ -159,4 +159,24 @@ public class ReporteService {
             return "Error al obtener estadísticas de títulos: " + e.getMessage();
         }
     }
+
+    public List<ControllerReporte.PropuestaReporte> obtenerTodasPropuestasObjetos(String filtroEstado) {
+        ControllerReporte ctrl = new ControllerReporte();
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) return new java.util.ArrayList<>();
+            return ctrl.obtenerTodasPropuestasObjetos(cn, filtroEstado);
+        } catch (Exception e) {
+            return new java.util.ArrayList<>();
+        }
+    }
+
+    public List<ControllerReporte.EscritorReporte> obtenerTopEscritoresObjetos() {
+        ControllerReporte ctrl = new ControllerReporte();
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) return new java.util.ArrayList<>();
+            return ctrl.obtenerTopEscritoresObjetos(cn, 10);
+        } catch (Exception e) {
+            return new java.util.ArrayList<>();
+        }
+    }
 }

@@ -71,7 +71,11 @@ public class StartForm extends JFrame {
                     }
 
 
-                    case ADMIN    -> new MenuAdmin().run();
+//                    case ADMIN    -> new MenuAdmin().run();
+                    case ADMIN -> {
+                        dispose();
+                        new AdminForm();
+                    }
                     default       -> {}
                 }
             }

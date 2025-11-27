@@ -159,4 +159,27 @@ public class ControllerTitulo {
             return filas;
         }
     }
+
+    public java.util.List<Titulo> obtenerTodos(Connection cn) throws SQLException {
+        String sql = """
+            SELECT t.id, t.propuesta_id, t.titulo, t.estado_comercializacion_id, t.fecha_creacion
+            FROM titulos t
+            ORDER BY t.id DESC
+            """;
+        try (PreparedStatement ps = cn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            java.util.List<Titulo> titulos = new java.util.ArrayList<>();
+            while (rs.next()) {
+                EstadoComercializacion estado = getEstadoComercializacionPorId(rs.getInt("estado_comercializacion_id"));
+                Titulo titulo = new Titulo(
+                    rs.getInt("id"),
+                    rs.getInt("propuesta_id"),
+                    rs.getString("titulo"),
+                    estado
+                );
+                titulos.add(titulo);
+            }
+            return titulos;
+        }
+    }
 }

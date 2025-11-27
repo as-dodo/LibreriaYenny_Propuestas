@@ -163,4 +163,103 @@ public class ControllerReporte {
         
         return estadisticas;
     }
+
+    public static class PropuestaReporte {
+        public int id;
+        public String titulo;
+        public String escritor;
+        public String estado;
+        public Timestamp fechaCreacion;
+
+        public PropuestaReporte(int id, String titulo, String escritor, String estado, Timestamp fechaCreacion) {
+            this.id = id;
+            this.titulo = titulo;
+            this.escritor = escritor;
+            this.estado = estado;
+            this.fechaCreacion = fechaCreacion;
+        }
+    }
+
+    public static class EscritorReporte {
+        public String nombre;
+        public int totalPropuestas;
+        public int aprobadas;
+
+        public EscritorReporte(String nombre, int totalPropuestas, int aprobadas) {
+            this.nombre = nombre;
+            this.totalPropuestas = totalPropuestas;
+            this.aprobadas = aprobadas;
+        }
+    }
+
+    public List<PropuestaReporte> obtenerTodasPropuestasObjetos(Connection cn, String filtroEstado) throws SQLException {
+        String sql;
+        
+        if (filtroEstado == null || filtroEstado.equals("TODAS")) {
+            sql = """
+                SELECT p.id, p.titulo_propuesto, u.nombre as escritor, p.estado, p.fecha_creacion
+                FROM propuestas p
+                JOIN usuarios u ON u.id = p.escritor_id
+                ORDER BY p.fecha_creacion DESC
+                """;
+        } else {
+            sql = """
+                SELECT p.id, p.titulo_propuesto, u.nombre as escritor, p.estado, p.fecha_creacion
+                FROM propuestas p
+                JOIN usuarios u ON u.id = p.escritor_id
+                WHERE p.estado = ?
+                ORDER BY p.fecha_creacion DESC
+                """;
+        }
+        
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            if (filtroEstado != null && !filtroEstado.equals("TODAS")) {
+                ps.setString(1, filtroEstado);
+            }
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                List<PropuestaReporte> propuestas = new ArrayList<>();
+                while (rs.next()) {
+                    propuestas.add(new PropuestaReporte(
+                            rs.getInt("id"),
+                            rs.getString("titulo_propuesto"),
+                            rs.getString("escritor"),
+                            rs.getString("estado"),
+                            rs.getTimestamp("fecha_creacion")
+                    ));
+                }
+                return propuestas;
+            }
+        }
+    }
+
+    public List<EscritorReporte> obtenerTopEscritoresObjetos(Connection cn, int limite) throws SQLException {
+        String sql = """
+            SELECT u.nombre, 
+                   COUNT(p.id) as total_propuestas,
+                   SUM(CASE WHEN p.estado = 'APROBADA' THEN 1 ELSE 0 END) as aprobadas
+            FROM usuarios u
+            JOIN propuestas p ON p.escritor_id = u.id
+            WHERE u.rol = 'ESCRITOR'
+            GROUP BY u.id, u.nombre
+            ORDER BY total_propuestas DESC
+            LIMIT ?
+            """;
+        
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, limite);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                List<EscritorReporte> escritores = new ArrayList<>();
+                while (rs.next()) {
+                    escritores.add(new EscritorReporte(
+                            rs.getString("nombre"),
+                            rs.getInt("total_propuestas"),
+                            rs.getInt("aprobadas")
+                    ));
+                }
+                return escritores;
+            }
+        }
+    }
 }
