@@ -1,6 +1,7 @@
 package ui.menu;
 
 import bll.services.PropuestaService;
+import bll.usuarios.Editor;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -26,12 +27,14 @@ public class EditorForm extends JFrame{
     private JTable tblBandejaPropuestas;
 
     private final PropuestaService propuestaService = new PropuestaService();
+    private final Editor editorActual;
 
-    public EditorForm() {
+    public EditorForm(Editor editor) {
+            this.editorActual = editor;
             setContentPane(rootPanel);
             setTitle("Editor - Menú");
             setSize(800, 600);
-            setDefaultCloseOperation(EXIT_ON_CLOSE);
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             setLocationRelativeTo(null);
 
             rootPanel.removeAll();
@@ -56,6 +59,7 @@ public class EditorForm extends JFrame{
 
             inicializarTablasEditor();
             cargarBandeja();
+            cargarMisPropuestas();
 
             PropuestasButton.addActionListener(new ActionListener() {
                 @Override
@@ -151,6 +155,28 @@ public class EditorForm extends JFrame{
             });
         }
     }
+
+    private void cargarMisPropuestas() {
+        DefaultTableModel model = (DefaultTableModel) tblMisPropuestas.getModel();
+        model.setRowCount(0);
+
+        if (editorActual == null) {
+            return;
+        }
+
+        var propuestas = propuestaService.obtenerPorEditor(editorActual.getId());
+        for (var p : propuestas) {
+            model.addRow(new Object[]{
+                    p.getAutor(),
+                    p.getTitulo(),
+                    p.getResumen(),
+                    p.getEstado(),
+                    p.getFechaCreacion(),
+                    p.getArchivoUrl()
+            });
+        }
+    }
+
 
 
     private void showMenu() {

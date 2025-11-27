@@ -7,7 +7,6 @@ import bll.views.PropuestaEditorView;
 import dll.Conexion;
 import dll.ControllerPropuesta;
 import java.sql.Connection;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -102,6 +101,7 @@ public class PropuestaService {
             }
 
             propuesta.setEstado(estado);
+            propuesta.setEditorId(editorId);
             boolean ok = ctrl.actualizarEstado(cn, propuesta);
 
             if (ok) {
@@ -191,7 +191,47 @@ public class PropuestaService {
         }
     }
 
+    public List<PropuestaEditorView> obtenerPorEditor(String editorId) {
+        List<PropuestaEditorView> propuestas = new ArrayList<>();
+
+        if (Validaciones.isBlank(editorId) || !Validaciones.esNumero(editorId)) {
+            return propuestas;
+        }
+
+        int id = Integer.parseInt(editorId.trim());
+        ControllerPropuesta ctrl = new ControllerPropuesta();
+
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) {
+                return propuestas;
+            }
+
+            return ctrl.listarPorEditor(cn, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return propuestas;
+        }
+    }
+
+    public String asignarAEditor(String propuestaId, int editorId) {
+        if (Validaciones.isBlank(propuestaId) || !Validaciones.esNumero(propuestaId)) {
+            return "ID invalido";
+        }
+        if (editorId <= 0) return "Editor invalido";
+
+        int idPropuesta = Integer.parseInt(propuestaId.trim());
+        ControllerPropuesta ctrl = new ControllerPropuesta();
+
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) return "No hay conexion a la base de datos";
+
+            boolean asignado = ctrl.asignarEditor(cn, idPropuesta, editorId);
+            return asignado ? "Propuesta asignada al editor" : "La propuesta ya tiene editor";
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
 
 
 }
-

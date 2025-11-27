@@ -10,6 +10,7 @@ public class PropuestaEditorView {
     private EstadoPropuesta estado;
     private LocalDateTime fechaCreacion;
     private String archivoUrl;
+    private Integer editorId;
 
     public PropuestaEditorView(int id,
                                String autor,
@@ -17,7 +18,8 @@ public class PropuestaEditorView {
                                String resumen,
                                EstadoPropuesta estado,
                                LocalDateTime fechaCreacion,
-                               String archivoUrl) {
+                               String archivoUrl,
+                               Integer editorId) {
         this.id = id;
         this.autor = autor;
         this.titulo = titulo;
@@ -25,6 +27,7 @@ public class PropuestaEditorView {
         this.estado = estado;
         this.fechaCreacion = fechaCreacion;
         this.archivoUrl = archivoUrl;
+        this.editorId = editorId;
     }
 
     public int getId() { return id; }
@@ -34,4 +37,5 @@ public class PropuestaEditorView {
     public EstadoPropuesta getEstado() { return estado; }
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
     public String getArchivoUrl() { return archivoUrl; }
+    public Integer getEditorId() { return editorId; }
 }

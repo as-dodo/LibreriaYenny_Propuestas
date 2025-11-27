@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class Propuesta {
     private int id;
     private int escritorId;
+    private Integer editorId;
     private String tituloPropuesto;
     private String resumen;
     private String archivoUrl;
@@ -14,6 +15,7 @@ public class Propuesta {
 
     public Propuesta(int id,
                      int escritorId,
+                     Integer editorId,
                      String tituloPropuesto,
                      String resumen,
                      String archivoUrl,
@@ -22,6 +24,7 @@ public class Propuesta {
                      LocalDateTime fechaDecision) {
         this.id = id;
         this.escritorId = escritorId;
+        this.editorId = editorId;
         this.tituloPropuesto = tituloPropuesto;
         this.resumen = resumen;
         this.archivoUrl = archivoUrl;
@@ -35,6 +38,7 @@ public class Propuesta {
                      String resumen,
                      String archivoUrl) {
         this.escritorId = escritorId;
+        this.editorId = null;
         this.tituloPropuesto = tituloPropuesto;
         this.resumen = resumen;
         this.archivoUrl = archivoUrl;
@@ -47,6 +51,9 @@ public class Propuesta {
 
     public int getEscritorId() { return escritorId; }
     public void setEscritorId(int escritorId) { this.escritorId = escritorId; }
+
+    public Integer getEditorId() { return editorId; }
+    public void setEditorId(Integer editorId) { this.editorId = editorId; }
 
     public String getTituloPropuesto() { return tituloPropuesto; }
     public void setTituloPropuesto(String tituloPropuesto) { this.tituloPropuesto = tituloPropuesto; }

@@ -3,7 +3,6 @@ package dll;
 import bll.propuestas.EstadoPropuesta;
 import bll.propuestas.Propuesta;
 import bll.views.PropuestaEditorView;
-
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,15 +12,20 @@ public class ControllerPropuesta {
 
     public boolean insertarPropuesta(Connection cn, Propuesta propuesta) throws SQLException {
         String sql = """
-                INSERT INTO propuestas (escritor_id, titulo_propuesto, resumen, archivo_url, estado)
-                VALUES (?,?,?,?,?)
+                INSERT INTO propuestas (escritor_id, editor_id, titulo_propuesto, resumen, archivo_url, estado)
+                VALUES (?,?,?,?,?,?)
                 """;
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
             ps.setInt(1, propuesta.getEscritorId());
-            ps.setString(2, propuesta.getTituloPropuesto());
-            ps.setString(3, propuesta.getResumen());
-            ps.setString(4, propuesta.getArchivoUrl());
-            ps.setString(5, propuesta.getEstado().name());
+            if (propuesta.getEditorId() != null) {
+                ps.setInt(2, propuesta.getEditorId());
+            } else {
+                ps.setNull(2, Types.INTEGER);
+            }
+            ps.setString(3, propuesta.getTituloPropuesto());
+            ps.setString(4, propuesta.getResumen());
+            ps.setString(5, propuesta.getArchivoUrl());
+            ps.setString(6, propuesta.getEstado().name());
             return ps.executeUpdate() > 0;
         }
     }
@@ -75,7 +79,9 @@ public class ControllerPropuesta {
     public boolean actualizarEstado(Connection cn, Propuesta propuesta) throws SQLException {
         String sql = """
                 UPDATE propuestas
-                SET estado = ?, fecha_decision = CASE
+                SET estado = ?,
+                    editor_id = COALESCE(?, editor_id),
+                    fecha_decision = CASE
                      WHEN ? IN ('APROBADA','RECHAZADA') THEN CURRENT_TIMESTAMP
                      ELSE fecha_decision
                 END
@@ -83,8 +89,13 @@ public class ControllerPropuesta {
                 """;
         try (PreparedStatement ps = cn.prepareStatement(sql)) {
             ps.setString(1, propuesta.getEstado().name());
-            ps.setString(2, propuesta.getEstado().name());
-            ps.setInt(3, propuesta.getId());
+            if (propuesta.getEditorId() != null) {
+                ps.setInt(2, propuesta.getEditorId());
+            } else {
+                ps.setNull(2, Types.INTEGER);
+            }
+            ps.setString(3, propuesta.getEstado().name());
+            ps.setInt(4, propuesta.getId());
             return ps.executeUpdate() > 0;
         }
     }
@@ -172,7 +183,7 @@ public class ControllerPropuesta {
 
     public Propuesta obtenerPorId(Connection cn, int propuestaId) throws SQLException {
         String sql = """
-            SELECT id, escritor_id, titulo_propuesto, resumen, archivo_url, estado, fecha_creacion, fecha_decision
+            SELECT id, escritor_id, editor_id, titulo_propuesto, resumen, archivo_url, estado, fecha_creacion, fecha_decision
             FROM propuestas
             WHERE id = ?
             """;
@@ -188,6 +199,7 @@ public class ControllerPropuesta {
                 return new Propuesta(
                         rs.getInt("id"),
                         rs.getInt("escritor_id"),
+                        (Integer) rs.getObject("editor_id"),
                         rs.getString("titulo_propuesto"),
                         rs.getString("resumen"),
                         rs.getString("archivo_url"),
@@ -200,7 +212,7 @@ public class ControllerPropuesta {
     }
     public List<Propuesta> listarObjetosPorEscritor(Connection cn, int escritorId) throws SQLException {
         String sql = """
-            SELECT id, escritor_id, titulo_propuesto, resumen, archivo_url,
+            SELECT id, escritor_id, editor_id, titulo_propuesto, resumen, archivo_url,
                    estado, fecha_creacion, fecha_decision
             FROM propuestas
             WHERE escritor_id = ?
@@ -222,6 +234,7 @@ public class ControllerPropuesta {
                     Propuesta p = new Propuesta(
                             rs.getInt("id"),
                             rs.getInt("escritor_id"),
+                            (Integer) rs.getObject("editor_id"),
                             rs.getString("titulo_propuesto"),
                             rs.getString("resumen"),
                             rs.getString("archivo_url"),
@@ -246,7 +259,8 @@ public class ControllerPropuesta {
                     p.resumen,
                     p.estado,
                     p.fecha_creacion,
-                    p.archivo_url
+                    p.archivo_url,
+                    p.editor_id
             FROM propuestas p
             JOIN usuarios u ON u.id = p.escritor_id
             WHERE p.estado IN ('ENVIADA', 'EN_REVISION')
@@ -270,7 +284,8 @@ public class ControllerPropuesta {
                         rs.getString("resumen"),
                         estado,
                         fecha,
-                        rs.getString("archivo_url")
+                        rs.getString("archivo_url"),
+                        (Integer) rs.getObject("editor_id")
                 );
                 filas.add(view);
             }
@@ -279,6 +294,65 @@ public class ControllerPropuesta {
         }
     }
 
+    public List<PropuestaEditorView> listarPorEditor(Connection cn, int editorId) throws SQLException {
+        String sql = """
+        SELECT  p.id,
+                u.nombre AS autor,
+                p.titulo_propuesto,
+                p.resumen,
+                p.estado,
+                p.fecha_creacion,
+                p.archivo_url,
+                p.editor_id
+        FROM propuestas p
+        JOIN usuarios u ON u.id = p.escritor_id
+        WHERE p.editor_id = ?
+        ORDER BY p.fecha_creacion DESC
+        """;
+
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, editorId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                List<PropuestaEditorView> filas = new ArrayList<>();
+
+                while (rs.next()) {
+                    EstadoPropuesta estado = EstadoPropuesta.valueOf(rs.getString("estado"));
+                    Timestamp ts = rs.getTimestamp("fecha_creacion");
+                    LocalDateTime fecha = ts != null ? ts.toLocalDateTime() : null;
+
+                    PropuestaEditorView view = new PropuestaEditorView(
+                            rs.getInt("id"),
+                            rs.getString("autor"),
+                            rs.getString("titulo_propuesto"),
+                            rs.getString("resumen"),
+                            estado,
+                            fecha,
+                            rs.getString("archivo_url"),
+                            (Integer) rs.getObject("editor_id")
+                    );
+                    filas.add(view);
+                }
+
+                return filas;
+            }
+        }
+    }
+
+    public boolean asignarEditor(Connection cn, int propuestaId, int editorId) throws SQLException {
+        String sql = """
+            UPDATE propuestas
+            SET editor_id = ?,
+                estado = CASE WHEN estado = 'ENVIADA' THEN 'EN_REVISION' ELSE estado END
+            WHERE id = ? AND editor_id IS NULL
+            """;
+
+        try (PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setInt(1, editorId);
+            ps.setInt(2, propuestaId);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
 
 }
-

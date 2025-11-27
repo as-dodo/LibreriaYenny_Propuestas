@@ -67,7 +67,7 @@ public class StartForm extends JFrame {
                     }
                     case EDITOR   -> {
                         dispose();
-                        new EditorForm();
+                        new EditorForm((Editor) usuario);
                     }
 
 

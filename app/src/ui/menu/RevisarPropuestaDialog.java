@@ -2,6 +2,8 @@ package ui.menu;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class RevisarPropuestaDialog extends JDialog {
     private JPanel rootPanel;
@@ -55,6 +57,24 @@ public class RevisarPropuestaDialog extends JDialog {
 
         pack();
         setLocationRelativeTo(owner);
+        btnAprobar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        btnRechazar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        btnComentar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
 }
