@@ -25,6 +25,9 @@ public class EditorForm extends JFrame{
     private JPanel panelBandeja;
     private JTable tblMisPropuestas;
     private JTable tblBandejaPropuestas;
+    private JButton crearTítuloButton;
+    private JButton definirCondicionesButton;
+    private JButton asignarEditorButton;
 
     private final PropuestaService propuestaService = new PropuestaService();
     private final Editor editorActual;
@@ -112,6 +115,24 @@ public class EditorForm extends JFrame{
         }
 
         setVisible(true);
+        asignarEditorButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        crearTítuloButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        definirCondicionesButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     private void inicializarTablasEditor() {
