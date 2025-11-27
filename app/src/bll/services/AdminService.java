@@ -205,4 +205,17 @@ public class AdminService {
             return "Error: " + e.getMessage();
         }
     }
+
+    public java.util.List<Usuario> obtenerTodosLosUsuarios() {
+        ControllerUsuario ctrl = new ControllerUsuario();
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) {
+                return java.util.Collections.emptyList();
+            }
+            return ctrl.listarTodosLosUsuarios(cn);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return java.util.Collections.emptyList();
+        }
+    }
 }

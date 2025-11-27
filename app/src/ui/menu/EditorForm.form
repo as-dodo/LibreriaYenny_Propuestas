@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ui.menu.EditorForm">
   <grid id="27dc6" binding="rootPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="531" height="630"/>
+      <xy x="20" y="20" width="555" height="630"/>
     </constraints>
     <properties>
       <preferredSize width="1000" height="1000"/>
@@ -10,207 +10,422 @@
     </properties>
     <border type="none"/>
     <children>
-      <grid id="7b211" binding="panelMenu" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
-        <constraints border-constraint="North"/>
-        <properties>
-          <alignmentY value="0.5"/>
-          <autoscrolls value="false"/>
-          <doubleBuffered value="false"/>
-          <preferredSize width="600" height="600"/>
-          <requestFocusEnabled value="true"/>
-          <verifyInputWhenFocusTarget value="true"/>
-          <visible value="false"/>
-        </properties>
-        <border type="none"/>
-        <children>
-          <component id="18bec" class="javax.swing.JButton" binding="PropuestasButton">
-            <constraints/>
-            <properties>
-              <borderPainted value="true"/>
-              <contentAreaFilled value="true"/>
-              <horizontalTextPosition value="0"/>
-              <preferredSize width="200" height="50"/>
-              <text value="PROPUESTAS"/>
-            </properties>
-          </component>
-          <component id="af98d" class="javax.swing.JButton" binding="TitulosButton">
-            <constraints/>
-            <properties>
-              <preferredSize width="200" height="50"/>
-              <text value="TITULOS"/>
-            </properties>
-          </component>
-          <component id="2c5fa" class="javax.swing.JButton" binding="ReportesButton">
-            <constraints/>
-            <properties>
-              <focusCycleRoot value="false"/>
-              <preferredSize width="200" height="50"/>
-              <text value="REPORTES"/>
-            </properties>
-          </component>
-          <component id="5ae11" class="javax.swing.JButton" binding="SalirButton">
-            <constraints/>
-            <properties>
-              <preferredSize width="200" height="50"/>
-              <text value="SALIR"/>
-            </properties>
-          </component>
-        </children>
-      </grid>
-      <grid id="6fbcf" binding="panelPropuestas" layout-manager="GridLayoutManager" row-count="5" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+      <grid id="7570e" binding="panelContenido" layout-manager="CardLayout" hgap="0" vgap="0">
         <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>
         <children>
-          <component id="7f0ff" class="javax.swing.JButton" binding="revisarButton" default-binding="true">
+          <grid id="7b211" binding="panelMenu" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
             <constraints>
-              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="170" height="35"/>
-              </grid>
+              <card name="Card1"/>
             </constraints>
             <properties>
-              <margin top="0" left="0" bottom="0" right="0"/>
-              <text value="Revisar"/>
-            </properties>
-          </component>
-          <component id="9fd33" class="javax.swing.JButton" binding="volverButton">
-            <constraints>
-              <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="170" height="35"/>
-              </grid>
-            </constraints>
-            <properties>
-              <text value="Volver"/>
-            </properties>
-          </component>
-          <vspacer id="77e71">
-            <constraints>
-              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </vspacer>
-          <vspacer id="16b33">
-            <constraints>
-              <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </vspacer>
-          <hspacer id="cd3ca">
-            <constraints>
-              <grid row="3" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-          <hspacer id="57ff4">
-            <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </hspacer>
-          <vspacer id="4fe94">
-            <constraints>
-              <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-            </constraints>
-          </vspacer>
-          <tabbedpane id="5246d" binding="tabPropuestas">
-            <constraints>
-              <grid row="1" column="1" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <preferred-size width="600" height="400"/>
-              </grid>
-            </constraints>
-            <properties>
-              <autoscrolls value="true"/>
+              <alignmentY value="0.5"/>
+              <autoscrolls value="false"/>
+              <doubleBuffered value="false"/>
+              <preferredSize width="600" height="600"/>
+              <requestFocusEnabled value="true"/>
+              <verifyInputWhenFocusTarget value="true"/>
+              <visible value="false"/>
             </properties>
             <border type="none"/>
             <children>
-              <grid id="36ad8" binding="panelMisPropuestas" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
+              <component id="18bec" class="javax.swing.JButton" binding="PropuestasButton">
+                <constraints/>
+                <properties>
+                  <borderPainted value="true"/>
+                  <contentAreaFilled value="true"/>
+                  <horizontalTextPosition value="0"/>
+                  <preferredSize width="200" height="50"/>
+                  <text value="PROPUESTAS"/>
+                </properties>
+              </component>
+              <component id="af98d" class="javax.swing.JButton" binding="TitulosButton">
+                <constraints/>
+                <properties>
+                  <preferredSize width="200" height="50"/>
+                  <text value="TITULOS"/>
+                </properties>
+              </component>
+              <component id="2c5fa" class="javax.swing.JButton" binding="ReportesButton">
+                <constraints/>
+                <properties>
+                  <focusCycleRoot value="false"/>
+                  <preferredSize width="200" height="50"/>
+                  <text value="REPORTES"/>
+                </properties>
+              </component>
+              <component id="5ae11" class="javax.swing.JButton" binding="SalirButton">
+                <constraints/>
+                <properties>
+                  <preferredSize width="200" height="50"/>
+                  <text value="SALIR"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="6fbcf" binding="panelPropuestas" layout-manager="GridLayoutManager" row-count="5" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <card name="Card2"/>
+            </constraints>
+            <properties>
+              <visible value="false"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="7f0ff" class="javax.swing.JButton" binding="revisarButton" default-binding="true">
                 <constraints>
-                  <tabbedpane title="Mis Propuestas"/>
+                  <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="170" height="35"/>
+                  </grid>
                 </constraints>
                 <properties>
-                  <preferredSize width="200" height="30"/>
+                  <margin top="0" left="0" bottom="0" right="0"/>
+                  <text value="Revisar"/>
+                </properties>
+              </component>
+              <component id="9fd33" class="javax.swing.JButton" binding="volverButton">
+                <constraints>
+                  <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="170" height="35"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <text value="Volver"/>
+                </properties>
+              </component>
+              <vspacer id="77e71">
+                <constraints>
+                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </vspacer>
+              <vspacer id="16b33">
+                <constraints>
+                  <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </vspacer>
+              <hspacer id="cd3ca">
+                <constraints>
+                  <grid row="3" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <hspacer id="57ff4">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <vspacer id="4fe94">
+                <constraints>
+                  <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </vspacer>
+              <tabbedpane id="5246d" binding="tabPropuestas">
+                <constraints>
+                  <grid row="1" column="1" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="600" height="400"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <autoscrolls value="true"/>
                 </properties>
                 <border type="none"/>
                 <children>
-                  <scrollpane id="dd76e">
+                  <grid id="36ad8" binding="panelMisPropuestas" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <tabbedpane title="Mis Propuestas"/>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <preferredSize width="200" height="30"/>
+                    </properties>
                     <border type="none"/>
                     <children>
-                      <component id="361dc" class="javax.swing.JTable" binding="tblMisPropuestas">
-                        <constraints/>
-                        <properties>
-                          <autoCreateRowSorter value="true"/>
-                          <cellSelectionEnabled value="true"/>
-                          <dragEnabled value="true"/>
-                        </properties>
-                      </component>
-                    </children>
-                  </scrollpane>
-                  <vspacer id="598f2">
-                    <constraints>
-                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                  </vspacer>
-                </children>
-              </grid>
-              <grid id="7eb73" binding="panelBandeja" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                <margin top="0" left="0" bottom="0" right="0"/>
-                <constraints>
-                  <tabbedpane title="Bandeja de Propuestas"/>
-                </constraints>
-                <properties>
-                  <preferredSize width="200" height="30"/>
-                </properties>
-                <border type="none"/>
-                <children>
-                  <scrollpane id="c6d0b">
-                    <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none"/>
-                    <children>
-                      <component id="bc271" class="javax.swing.JTable" binding="tblBandejaPropuestas">
-                        <constraints/>
+                      <scrollpane id="dd76e">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
                         <properties/>
-                      </component>
+                        <border type="none"/>
+                        <children>
+                          <component id="361dc" class="javax.swing.JTable" binding="tblMisPropuestas">
+                            <constraints/>
+                            <properties>
+                              <autoCreateRowSorter value="true"/>
+                              <cellSelectionEnabled value="true"/>
+                              <dragEnabled value="true"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </scrollpane>
+                      <vspacer id="598f2">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                      </vspacer>
                     </children>
-                  </scrollpane>
+                  </grid>
+                  <grid id="7eb73" binding="panelBandeja" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <tabbedpane title="Bandeja de Propuestas"/>
+                    </constraints>
+                    <properties>
+                      <preferredSize width="200" height="30"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <scrollpane id="c6d0b">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="bc271" class="javax.swing.JTable" binding="tblBandejaPropuestas">
+                            <constraints/>
+                            <properties/>
+                          </component>
+                        </children>
+                      </scrollpane>
+                    </children>
+                  </grid>
+                </children>
+              </tabbedpane>
+              <component id="941e9" class="javax.swing.JButton" binding="crearTítuloButton" default-binding="true">
+                <constraints>
+                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="170" height="35"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <text value="Crear Título"/>
+                </properties>
+              </component>
+              <component id="ccf4e" class="javax.swing.JButton" binding="definirCondicionesButton" default-binding="true">
+                <constraints>
+                  <grid row="3" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="170" height="35"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <text value="Definir condiciones"/>
+                </properties>
+              </component>
+              <component id="b1a4b" class="javax.swing.JButton" binding="asignarEditorButton" default-binding="true">
+                <constraints>
+                  <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="170" height="35"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <text value="Asignar Editor"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="d4895" binding="panelTitulos" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <card name="Card3"/>
+            </constraints>
+            <properties/>
+            <border type="empty">
+              <size top="20" left="10" bottom="20" right="10"/>
+            </border>
+            <children>
+              <scrollpane id="516cf">
+                <constraints border-constraint="North"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="bc3d0" class="javax.swing.JTable" binding="tblTitulos">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
+              <grid id="c7d4" binding="pnlActions" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints border-constraint="South"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="4a3f0" class="javax.swing.JButton" binding="btnTransferirAMarketing">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="200" height="35"/>
+                      <text value="Transferir a Marketing"/>
+                    </properties>
+                  </component>
+                  <component id="2d26a" class="javax.swing.JButton" binding="btnActualizarEstadoComercializacion">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="275" height="35"/>
+                      <rolloverEnabled value="true"/>
+                      <text value="Actualizar estado de comercialización"/>
+                    </properties>
+                  </component>
+                  <component id="761c5" class="javax.swing.JButton" binding="btnVolver">
+                    <constraints/>
+                    <properties>
+                      <preferredSize width="170" height="35"/>
+                      <text value="Volver"/>
+                    </properties>
+                  </component>
                 </children>
               </grid>
             </children>
-          </tabbedpane>
-          <component id="941e9" class="javax.swing.JButton" binding="crearTítuloButton" default-binding="true">
+          </grid>
+          <grid id="5f8b1" binding="panelReportes" layout-manager="BorderLayout" hgap="0" vgap="0">
             <constraints>
-              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="170" height="35"/>
-              </grid>
+              <card name="Card4"/>
             </constraints>
-            <properties>
-              <text value="Crear Título"/>
-            </properties>
-          </component>
-          <component id="ccf4e" class="javax.swing.JButton" binding="definirCondicionesButton" default-binding="true">
-            <constraints>
-              <grid row="3" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="170" height="35"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <tabbedpane id="cf40b" binding="TabReportes">
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <grid id="63334" binding="tabEstadisticasGenerales" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <tabbedpane title="Estadisticas Generales"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <scrollpane id="f615">
+                        <constraints border-constraint="Center"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="8a260" class="javax.swing.JTextArea" binding="txtEstadisticasTitulos">
+                            <constraints/>
+                            <properties>
+                              <editable value="false"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </scrollpane>
+                    </children>
+                  </grid>
+                  <grid id="1f00b" binding="TabTodasPropuestas" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <tabbedpane title="Estadísticas de Propuestas"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <grid id="6f6fe" binding="panelFiltroReportePropuestas" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                        <constraints border-constraint="North"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="1621c" class="javax.swing.JLabel" binding="lblEstadoFiltro">
+                            <constraints/>
+                            <properties>
+                              <text value="Estado"/>
+                            </properties>
+                          </component>
+                          <hspacer id="f4723">
+                            <constraints/>
+                          </hspacer>
+                          <component id="aaf7b" class="javax.swing.JComboBox" binding="cbEstadoReporte">
+                            <constraints/>
+                            <properties>
+                              <preferredSize width="170" height="35"/>
+                            </properties>
+                          </component>
+                          <component id="39529" class="javax.swing.JButton" binding="btnFiltrar">
+                            <constraints/>
+                            <properties>
+                              <preferredSize width="170" height="35"/>
+                              <text value="Filtrar"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <scrollpane id="b372">
+                        <constraints border-constraint="Center"/>
+                        <properties/>
+                        <border type="empty">
+                          <size top="10" left="0" bottom="0" right="0"/>
+                        </border>
+                        <children>
+                          <component id="873de" class="javax.swing.JTable" binding="tblReportePropuestas">
+                            <constraints/>
+                            <properties/>
+                          </component>
+                        </children>
+                      </scrollpane>
+                    </children>
+                  </grid>
+                  <grid id="c0dfe" binding="tabEstadisticasTitulos" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <tabbedpane title="Estadísticas de Títulos"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <scrollpane id="95765">
+                        <constraints border-constraint="Center"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="ed779" class="javax.swing.JTextArea" binding="txtEstTitulos">
+                            <constraints/>
+                            <properties>
+                              <editable value="false"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </scrollpane>
+                    </children>
+                  </grid>
+                  <grid id="f975e" binding="tabTopEscritores" layout-manager="BorderLayout" hgap="0" vgap="0">
+                    <constraints>
+                      <tabbedpane title="Top Escritores"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <scrollpane id="3d498">
+                        <constraints border-constraint="Center"/>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="9a70b" class="javax.swing.JTable" binding="tblTopEscritores">
+                            <constraints/>
+                            <properties/>
+                          </component>
+                        </children>
+                      </scrollpane>
+                    </children>
+                  </grid>
+                </children>
+              </tabbedpane>
+              <grid id="ebe32" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints border-constraint="South"/>
+                <properties/>
+                <border type="empty">
+                  <size top="10" left="0" bottom="20" right="0"/>
+                </border>
+                <children>
+                  <component id="a0b66" class="javax.swing.JButton" binding="volverButton1" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                        <preferred-size width="170" height="35"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <text value="Volver"/>
+                    </properties>
+                  </component>
+                </children>
               </grid>
-            </constraints>
-            <properties>
-              <text value="Definir condiciones"/>
-            </properties>
-          </component>
-          <component id="b1a4b" class="javax.swing.JButton" binding="asignarEditorButton" default-binding="true">
-            <constraints>
-              <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <preferred-size width="170" height="35"/>
-              </grid>
-            </constraints>
-            <properties>
-              <text value="Asignar Editor"/>
-            </properties>
-          </component>
+            </children>
+          </grid>
         </children>
       </grid>
     </children>

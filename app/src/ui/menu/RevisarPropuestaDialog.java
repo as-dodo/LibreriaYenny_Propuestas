@@ -1,5 +1,7 @@
 package ui.menu;
 
+import bll.services.PropuestaService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,15 +26,27 @@ public class RevisarPropuestaDialog extends JDialog {
     private JButton btnAprobar;
     private JButton btnCerrar;
 
+    private final int propuestaId;
+    private final int editorId;
+    private final PropuestaService propuestaService = new PropuestaService();
+    private final Runnable onActionCallback;
+
     public RevisarPropuestaDialog(Frame owner,
+                                  int propuestaId,
+                                  int editorId,
                                   String autor,
                                   String titulo,
                                   String resumen,
                                   String estado,
                                   String fecha,
-                                  String archivoUrl) {
+                                  String archivoUrl,
+                                  Runnable onActionCallback) {
 
         super(owner, "Revisar propuesta", true);
+
+        this.propuestaId = propuestaId;
+        this.editorId = editorId;
+        this.onActionCallback = onActionCallback;
 
         setContentPane(rootPanel);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -60,19 +74,58 @@ public class RevisarPropuestaDialog extends JDialog {
         btnAprobar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                String resultado = propuestaService.aprobar(String.valueOf(propuestaId), editorId);
+                JOptionPane.showMessageDialog(
+                        RevisarPropuestaDialog.this,
+                        resultado,
+                        "Aprobar Propuesta",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+                if (onActionCallback != null) {
+                    onActionCallback.run();
+                }
+                dispose();
             }
         });
         btnRechazar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                String resultado = propuestaService.rechazar(String.valueOf(propuestaId), editorId);
+                JOptionPane.showMessageDialog(
+                        RevisarPropuestaDialog.this,
+                        resultado,
+                        "Rechazar Propuesta",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+                if (onActionCallback != null) {
+                    onActionCallback.run();
+                }
+                dispose();
             }
         });
         btnComentar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String comentario = JOptionPane.showInputDialog(
+                        RevisarPropuestaDialog.this,
+                        "Ingres\u00e1 tu comentario:",
+                        "Agregar Comentario",
+                        JOptionPane.PLAIN_MESSAGE
+                );
 
+                if (comentario != null && !comentario.trim().isEmpty()) {
+                    String resultado = propuestaService.agregarComentario(
+                            String.valueOf(propuestaId),
+                            editorId,
+                            comentario.trim()
+                    );
+                    JOptionPane.showMessageDialog(
+                            RevisarPropuestaDialog.this,
+                            resultado,
+                            "Comentario",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
             }
         });
     }

@@ -124,4 +124,30 @@ public class ControllerUsuario {
         return null;
     }
 
+    public java.util.List<Usuario> listarTodosLosUsuarios(Connection cn) throws SQLException {
+        java.util.List<Usuario> usuarios = new java.util.ArrayList<>();
+        String sql = "SELECT id, nombre, email, rol FROM usuarios ORDER BY nombre";
+        
+        try (PreparedStatement ps = cn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                String rol = rs.getString("rol");
+                String id = String.valueOf(rs.getLong("id"));
+                String nombre = rs.getString("nombre");
+                String correo = rs.getString("email");
+
+                Usuario usuario = switch (rol) {
+                    case "EDITOR" -> new Editor(id, nombre, correo);
+                    case "ADMIN" -> new Admin(id, nombre, correo);
+                    default -> new Escritor(id, nombre, correo);
+                };
+                
+                usuarios.add(usuario);
+            }
+        }
+        
+        return usuarios;
+    }
+
 }
