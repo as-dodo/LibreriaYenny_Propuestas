@@ -18,6 +18,10 @@ public class AdminForm extends JFrame {
     private JButton eliminarUsuarioButton;
     private JButton modificarUsuarioButton;
     private JButton salirButton;
+    private JTabbedPane tabbedPane1;
+    private JTable table1;
+    private JButton actualizarButton;
+    private JButton volverButton;
 
     private final AdminService adminService = new AdminService();
 
