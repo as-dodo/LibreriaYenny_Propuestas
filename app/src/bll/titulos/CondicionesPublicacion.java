@@ -5,22 +5,25 @@ public class CondicionesPublicacion {
     private int propuestaId;
     private int tiradaInicial;
     private double porcentajeGananciasAutor;
+    private double precio;
     private String observaciones;
 
     public CondicionesPublicacion(Integer id, int propuestaId, int tiradaInicial,
-                                  double porcentajeGananciasAutor, String observaciones) {
+                                  double porcentajeGananciasAutor, double precio, String observaciones) {
         this.id = id;
         this.propuestaId = propuestaId;
         this.tiradaInicial = tiradaInicial;
         this.porcentajeGananciasAutor = porcentajeGananciasAutor;
+        this.precio = precio;
         this.observaciones = observaciones;
     }
 
     public CondicionesPublicacion(int propuestaId, int tiradaInicial,
-                                  double porcentajeGananciasAutor, String observaciones) {
+                                  double porcentajeGananciasAutor, double precio, String observaciones) {
         this.propuestaId = propuestaId;
         this.tiradaInicial = tiradaInicial;
         this.porcentajeGananciasAutor = porcentajeGananciasAutor;
+        this.precio = precio;
         this.observaciones = observaciones;
     }
 
@@ -35,6 +38,9 @@ public class CondicionesPublicacion {
 
     public double getPorcentajeGananciasAutor() { return porcentajeGananciasAutor; }
     public void setPorcentajeGananciasAutor(double porcentajeGananciasAutor) { this.porcentajeGananciasAutor = porcentajeGananciasAutor; }
+
+    public double getPrecio() { return precio; }
+    public void setPrecio(double precio) { this.precio = precio; }
 
     public String getObservaciones() { return observaciones; }
     public void setObservaciones(String observaciones) { this.observaciones = observaciones; }

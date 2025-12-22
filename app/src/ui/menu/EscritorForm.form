@@ -167,7 +167,7 @@
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <text value="Enlace"/>
+              <text value="Archivo"/>
             </properties>
           </component>
           <component id="297f" class="javax.swing.JTextField" binding="tfLink">
@@ -180,6 +180,15 @@
             <properties>
               <minimumSize width="49" height="40"/>
               <preferredSize width="49" height="40"/>
+            </properties>
+                    </component>
+          <component id="btnAdj" class="javax.swing.JButton" binding="btnAdjuntar" default-binding="true">
+            <constraints>
+              <grid row="14" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="5" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Adjuntar..."/>
             </properties>
           </component>
           <hspacer id="93bc8">
@@ -247,3 +256,4 @@
     </children>
   </grid>
 </form>
+

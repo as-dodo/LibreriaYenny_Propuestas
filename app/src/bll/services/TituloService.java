@@ -13,13 +13,13 @@ public class TituloService {
 
     private final HistoriaService historiaService = new HistoriaService();
 
-    public String definirCondiciones(String propuestaId, String tiradaStr, String porcentajeStr, String observaciones) {
+    public String definirCondiciones(String propuestaId, String tiradaStr, String porcentajeStr, String precioStr, String observaciones) {
         if (Validaciones.isBlank(propuestaId) || !Validaciones.esNumero(propuestaId)) {
-            return "ID de propuesta inválido";
+            return "ID de propuesta invalido";
         }
 
         if (Validaciones.isBlank(tiradaStr) || !Validaciones.esNumero(tiradaStr)) {
-            return "Tirada inicial debe ser un número";
+            return "Tirada inicial debe ser un numero";
         }
 
         int tirada = Integer.parseInt(tiradaStr.trim());
@@ -38,18 +38,32 @@ public class TituloService {
                 return "Porcentaje debe estar entre 0 y 100";
             }
         } catch (NumberFormatException e) {
-            return "Porcentaje inválido";
+            return "Porcentaje invalido";
+        }
+
+        if (Validaciones.isBlank(precioStr)) {
+            return "Precio por ejemplar es obligatorio";
+        }
+
+        double precio;
+        try {
+            precio = Double.parseDouble(precioStr.trim());
+            if (precio <= 0) {
+                return "Precio debe ser mayor a 0";
+            }
+        } catch (NumberFormatException e) {
+            return "Precio invalido";
         }
 
         int propId = Integer.parseInt(propuestaId.trim());
         String obs = Validaciones.linkOrNull(observaciones);
-        
-        CondicionesPublicacion condiciones = new CondicionesPublicacion(propId, tirada, porcentaje, obs);
-        
+
+        CondicionesPublicacion condiciones = new CondicionesPublicacion(propId, tirada, porcentaje, precio, obs);
+
         ControllerTitulo ctrl = new ControllerTitulo();
 
         try (Connection cn = Conexion.getInstance().getConnection()) {
-            if (cn == null) return "No hay conexión a la base de datos";
+            if (cn == null) return "No hay conexion a la base de datos";
 
             String estado = ctrl.obtenerEstadoPropuesta(cn, propId);
             if (estado == null) {
@@ -68,11 +82,11 @@ public class TituloService {
 
             if (creado) {
                 try {
-                    historiaService.registrarEvento(propId, null, AccionEvento.DEFINIR_CONDICIONES, 
-                        "Condiciones definidas: tirada " + tirada + ", porcentaje " + porcentaje + "%");
+                    historiaService.registrarEvento(propId, null, AccionEvento.DEFINIR_CONDICIONES,
+                        "Condiciones definidas: tirada " + tirada + ", porcentaje " + porcentaje + "%, precio " + precio);
                 } catch (Exception ignored) {
                 }
-                return "Condiciones de publicación definidas correctamente";
+                return "Condiciones de publicacion definidas correctamente";
             } else {
                 return "Error al definir condiciones";
             }
@@ -84,21 +98,21 @@ public class TituloService {
 
     public String crearTitulo(String propuestaId, String tituloStr) {
         if (Validaciones.isBlank(propuestaId) || !Validaciones.esNumero(propuestaId)) {
-            return "ID de propuesta inválido";
+            return "ID de propuesta invalido";
         }
 
         if (Validaciones.isBlank(tituloStr)) {
-            return "El título es obligatorio";
+            return "El titulo es obligatorio";
         }
 
         int propId = Integer.parseInt(propuestaId.trim());
-        
+
         Titulo titulo = new Titulo(propId, tituloStr.trim(), EstadoComercializacion.EN_PREPARACION);
-        
+
         ControllerTitulo ctrl = new ControllerTitulo();
 
         try (Connection cn = Conexion.getInstance().getConnection()) {
-            if (cn == null) return "No hay conexión a la base de datos";
+            if (cn == null) return "No hay conexion a la base de datos";
 
             String estado = ctrl.obtenerEstadoPropuesta(cn, propId);
             if (estado == null) {
@@ -106,24 +120,24 @@ public class TituloService {
             }
 
             if (!estado.equals("APROBADA")) {
-                return "Solo se pueden crear títulos desde propuestas aprobadas";
+                return "Solo se pueden crear titulos desde propuestas aprobadas";
             }
 
             if (ctrl.yaExisteTitulo(cn, propId)) {
-                return "Ya existe un título creado para esta propuesta";
+                return "Ya existe un titulo creado para esta propuesta";
             }
 
             boolean creado = ctrl.insertarTitulo(cn, titulo);
 
             if (creado) {
                 try {
-                    historiaService.registrarEvento(propId, null, AccionEvento.CREAR_TITULO, 
-                        "Título creado: " + tituloStr.trim());
+                    historiaService.registrarEvento(propId, null, AccionEvento.CREAR_TITULO,
+                        "Titulo creado: " + tituloStr.trim());
                 } catch (Exception ignored) {
                 }
-                return "Título creado correctamente";
+                return "Titulo creado correctamente";
             } else {
-                return "Error al crear el título";
+                return "Error al crear el titulo";
             }
 
         } catch (Exception e) {
@@ -133,22 +147,22 @@ public class TituloService {
 
     public String transferirAMarketing(String tituloId) {
         if (Validaciones.isBlank(tituloId) || !Validaciones.esNumero(tituloId)) {
-            return "ID de título inválido";
+            return "ID de titulo invalido";
         }
 
         int idTitulo = Integer.parseInt(tituloId.trim());
         ControllerTitulo ctrl = new ControllerTitulo();
 
         try (Connection cn = Conexion.getInstance().getConnection()) {
-            if (cn == null) return "No hay conexión a la base de datos";
+            if (cn == null) return "No hay conexion a la base de datos";
 
             Titulo titulo = ctrl.obtenerTituloPorId(cn, idTitulo);
             if (titulo == null) {
-                return "Título no encontrado";
+                return "Titulo no encontrado";
             }
 
             if (titulo.getEstadoComercializacion() != EstadoComercializacion.EN_PREPARACION) {
-                return "Solo se pueden transferir títulos en preparación";
+                return "Solo se pueden transferir titulos en preparacion";
             }
 
             titulo.setEstadoComercializacion(EstadoComercializacion.EN_PROMOCION);
@@ -156,13 +170,13 @@ public class TituloService {
 
             if (actualizado) {
                 try {
-                    historiaService.registrarEvento(titulo.getPropuestaId(), null, AccionEvento.TRANSFERIR_MARKETING, 
-                        "Título transferido a Marketing/Ventas");
+                    historiaService.registrarEvento(titulo.getPropuestaId(), null, AccionEvento.TRANSFERIR_MARKETING,
+                        "Titulo transferido a Marketing/Ventas");
                 } catch (Exception ignored) {
                 }
-                return "Título transferido a Marketing/Ventas correctamente";
+                return "Titulo transferido a Marketing/Ventas correctamente";
             } else {
-                return "Error al transferir el título";
+                return "Error al transferir el titulo";
             }
 
         } catch (Exception e) {
@@ -172,7 +186,7 @@ public class TituloService {
 
     public String actualizarEstadoComercializacion(String tituloId, String nuevoEstadoStr) {
         if (Validaciones.isBlank(tituloId) || !Validaciones.esNumero(tituloId)) {
-            return "ID de título inválido";
+            return "ID de titulo invalido";
         }
 
         if (nuevoEstadoStr == null) {
@@ -183,18 +197,18 @@ public class TituloService {
         try {
             nuevoEstado = EstadoComercializacion.valueOf(nuevoEstadoStr);
         } catch (IllegalArgumentException e) {
-            return "Estado inválido";
+            return "Estado invalido";
         }
 
         int idTitulo = Integer.parseInt(tituloId.trim());
         ControllerTitulo ctrl = new ControllerTitulo();
 
         try (Connection cn = Conexion.getInstance().getConnection()) {
-            if (cn == null) return "No hay conexión a la base de datos";
+            if (cn == null) return "No hay conexion a la base de datos";
 
             Titulo titulo = ctrl.obtenerTituloPorId(cn, idTitulo);
             if (titulo == null) {
-                return "Título no encontrado";
+                return "Titulo no encontrado";
             }
 
             titulo.setEstadoComercializacion(nuevoEstado);
@@ -202,12 +216,12 @@ public class TituloService {
 
             if (actualizado) {
                 try {
-                    historiaService.registrarEvento(titulo.getPropuestaId(), null, 
-                        AccionEvento.ACTUALIZAR_ESTADO_COMERCIALIZACION, 
+                    historiaService.registrarEvento(titulo.getPropuestaId(), null,
+                        AccionEvento.ACTUALIZAR_ESTADO_COMERCIALIZACION,
                         "Estado actualizado a " + nuevoEstado.name());
                 } catch (Exception ignored) {
                 }
-                return "Estado de comercialización actualizado correctamente a " + nuevoEstado.name();
+                return "Estado de comercializacion actualizado correctamente a " + nuevoEstado.name();
             } else {
                 return "Error al actualizar el estado";
             }
@@ -220,11 +234,11 @@ public class TituloService {
     public String listarTitulos() {
         ControllerTitulo ctrl = new ControllerTitulo();
         try (Connection cn = Conexion.getInstance().getConnection()) {
-            if (cn == null) return "No hay conexión a la base de datos";
-            
+            if (cn == null) return "No hay conexion a la base de datos";
+
             java.util.List<String> filas = ctrl.listarTitulos(cn);
-            if (filas.isEmpty()) return "No hay títulos registrados";
-            
+            if (filas.isEmpty()) return "No hay titulos registrados";
+
             return String.join("\n", filas);
         } catch (Exception e) {
             return "Error: " + e.getMessage();

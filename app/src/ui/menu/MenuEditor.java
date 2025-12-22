@@ -107,7 +107,7 @@ public class MenuEditor implements Menu {
         }
     }
 
-    private void definirCondiciones() {
+        private void definirCondiciones() {
         String propuestaId = JOptionPane.showInputDialog("ID de la propuesta aprobada:");
         if (propuestaId == null) return;
 
@@ -117,9 +117,12 @@ public class MenuEditor implements Menu {
         String porcentaje = JOptionPane.showInputDialog("Porcentaje de ganancias para el autor (0-100):");
         if (porcentaje == null) return;
 
+        String precio = JOptionPane.showInputDialog("Precio por ejemplar:");
+        if (precio == null) return;
+
         String observaciones = JOptionPane.showInputDialog("Observaciones (opcional):");
 
-        String resultado = tituloService.definirCondiciones(propuestaId, tirada, porcentaje, observaciones);
+        String resultado = tituloService.definirCondiciones(propuestaId, tirada, porcentaje, precio, observaciones);
         JOptionPane.showMessageDialog(null, resultado);
     }
 
@@ -191,3 +194,4 @@ public class MenuEditor implements Menu {
         menuReporte.mostrarMenu();
     }
 }
+

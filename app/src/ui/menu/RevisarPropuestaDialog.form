@@ -195,6 +195,16 @@
           </component>
         </children>
       </grid>
+      <component id="343ef" class="javax.swing.JButton" binding="btnDescargar">
+        <constraints>
+          <grid row="12" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="170" height="35"/>
+          </grid>
+        </constraints>
+        <properties>
+          <text value="Descargar Archivo"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

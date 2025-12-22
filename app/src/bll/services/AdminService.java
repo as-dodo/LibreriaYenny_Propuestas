@@ -1,12 +1,16 @@
 package bll.services;
 
 import bll.eventos.AccionEvento;
+import bll.views.LibroAprobadoView;
 import bll.usuarios.*;
 import dll.Conexion;
+import dll.ControllerTitulo;
 import dll.ControllerUsuario;
 import java.sql.Connection;
 import repository.HashUtil;
 import repository.Validaciones;
+import java.util.Collections;
+import java.util.List;
 
 public class AdminService {
 
@@ -14,15 +18,15 @@ public class AdminService {
 
     public String crearUsuario(String nombre, String email, String password, String rolStr) {
         if (Validaciones.isBlank(nombre) || Validaciones.isBlank(email) || Validaciones.isBlank(password)) {
-            return "Campos obligatorios vacíos";
+            return "Campos obligatorios vacios";
         }
 
         if (!Validaciones.emailValido(email)) {
-            return "Email inválido";
+            return "Email invalido";
         }
 
         if (!Validaciones.passwordMinLen(password, 6)) {
-            return "La contraseña debe tener al menos 6 caracteres";
+            return "La contrasena debe tener al menos 6 caracteres";
         }
 
         if (rolStr == null) {
@@ -33,7 +37,7 @@ public class AdminService {
         try {
             rol = Rol.valueOf(rolStr);
         } catch (IllegalArgumentException e) {
-            return "Rol inválido";
+            return "Rol invalido";
         }
 
         Usuario usuario = crearUsuarioSegunRol(nombre.trim(), email.trim(), rol);
@@ -41,7 +45,7 @@ public class AdminService {
         ControllerUsuario ctrl = new ControllerUsuario();
         try (Connection cn = Conexion.getInstance().getConnection()) {
             if (cn == null) {
-                return "No hay conexión a la base de datos";
+                return "No hay conexion a la base de datos";
             }
 
             if (ctrl.emailExiste(cn, email.trim())) {
@@ -53,7 +57,7 @@ public class AdminService {
 
             if (creado) {
                 try {
-                    historiaService.registrarEvento(null, null, AccionEvento.CREAR_USUARIO, 
+                    historiaService.registrarEvento(null, null, AccionEvento.CREAR_USUARIO,
                         "Usuario creado: " + email.trim() + " con rol " + rol);
                 } catch (Exception ignored) {
                 }
@@ -77,7 +81,7 @@ public class AdminService {
 
     public String asignarRol(String email, String nuevoRolStr) {
         if (Validaciones.isBlank(email) || !Validaciones.emailValido(email)) {
-            return "Email inválido";
+            return "Email invalido";
         }
 
         if (nuevoRolStr == null) {
@@ -88,13 +92,13 @@ public class AdminService {
         try {
             nuevoRol = Rol.valueOf(nuevoRolStr);
         } catch (IllegalArgumentException e) {
-            return "Rol inválido";
+            return "Rol invalido";
         }
 
         ControllerUsuario ctrl = new ControllerUsuario();
         try (Connection cn = Conexion.getInstance().getConnection()) {
             if (cn == null) {
-                return "No hay conexión a la base de datos";
+                return "No hay conexion a la base de datos";
             }
 
             Usuario usuario = ctrl.obtenerUsuarioPorEmail(cn, email.trim());
@@ -107,7 +111,7 @@ public class AdminService {
 
             if (actualizado) {
                 try {
-                    historiaService.registrarEvento(null, null, AccionEvento.ASIGNAR_ROL, 
+                    historiaService.registrarEvento(null, null, AccionEvento.ASIGNAR_ROL,
                         "Rol actualizado para " + email.trim() + " a " + nuevoRol);
                 } catch (Exception ignored) {
                 }
@@ -131,13 +135,13 @@ public class AdminService {
         }
 
         if (Validaciones.isBlank(nuevoEmail) || !Validaciones.emailValido(nuevoEmail)) {
-            return "Nuevo email inválido";
+            return "Nuevo email invalido";
         }
 
         ControllerUsuario ctrl = new ControllerUsuario();
         try (Connection cn = Conexion.getInstance().getConnection()) {
             if (cn == null) {
-                return "No hay conexión a la base de datos";
+                return "No hay conexion a la base de datos";
             }
 
             Usuario usuario = ctrl.obtenerUsuarioPorEmail(cn, email.trim());
@@ -147,7 +151,7 @@ public class AdminService {
 
             if (!email.trim().equals(nuevoEmail.trim())) {
                 if (ctrl.emailExiste(cn, nuevoEmail.trim())) {
-                    return "El nuevo email ya está registrado";
+                    return "El nuevo email ya esta registrado";
                 }
             }
 
@@ -158,7 +162,7 @@ public class AdminService {
 
             if (actualizado) {
                 try {
-                    historiaService.registrarEvento(null, null, AccionEvento.MODIFICAR_USUARIO, 
+                    historiaService.registrarEvento(null, null, AccionEvento.MODIFICAR_USUARIO,
                         "Usuario modificado: " + email.trim() + " -> " + nuevoEmail.trim());
                 } catch (Exception ignored) {
                 }
@@ -174,13 +178,13 @@ public class AdminService {
 
     public String eliminarUsuario(String email) {
         if (Validaciones.isBlank(email) || !Validaciones.emailValido(email)) {
-            return "Email inválido";
+            return "Email invalido";
         }
 
         ControllerUsuario ctrl = new ControllerUsuario();
         try (Connection cn = Conexion.getInstance().getConnection()) {
             if (cn == null) {
-                return "No hay conexión a la base de datos";
+                return "No hay conexion a la base de datos";
             }
 
             Usuario usuario = ctrl.obtenerUsuarioPorEmail(cn, email.trim());
@@ -192,7 +196,7 @@ public class AdminService {
 
             if (eliminado) {
                 try {
-                    historiaService.registrarEvento(null, null, AccionEvento.ELIMINAR_USUARIO, 
+                    historiaService.registrarEvento(null, null, AccionEvento.ELIMINAR_USUARIO,
                         "Usuario eliminado: " + email.trim());
                 } catch (Exception ignored) {
                 }
@@ -206,16 +210,61 @@ public class AdminService {
         }
     }
 
-    public java.util.List<Usuario> obtenerTodosLosUsuarios() {
+    public List<Usuario> obtenerTodosLosUsuarios() {
         ControllerUsuario ctrl = new ControllerUsuario();
         try (Connection cn = Conexion.getInstance().getConnection()) {
             if (cn == null) {
-                return java.util.Collections.emptyList();
+                return Collections.emptyList();
             }
             return ctrl.listarTodosLosUsuarios(cn);
         } catch (Exception e) {
             e.printStackTrace();
-            return java.util.Collections.emptyList();
+            return Collections.emptyList();
+        }
+    }
+
+    public List<LibroAprobadoView> obtenerLibrosAprobados() {
+        ControllerTitulo ctrl = new ControllerTitulo();
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) return Collections.emptyList();
+            return ctrl.listarLibrosAprobados(cn);
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
+
+    public String actualizarPrecio(String propuestaId, String nuevoPrecioStr) {
+        if (Validaciones.isBlank(propuestaId) || !Validaciones.esNumero(propuestaId)) {
+            return "ID de propuesta invalido";
+        }
+        if (Validaciones.isBlank(nuevoPrecioStr)) {
+            return "Precio obligatorio";
+        }
+        double precio;
+        try {
+            precio = Double.parseDouble(nuevoPrecioStr.trim());
+            if (precio <= 0) return "El precio debe ser mayor a 0";
+        } catch (NumberFormatException e) {
+            return "Precio invalido";
+        }
+
+        int id = Integer.parseInt(propuestaId.trim());
+        ControllerTitulo ctrl = new ControllerTitulo();
+        try (Connection cn = Conexion.getInstance().getConnection()) {
+            if (cn == null) return "No hay conexion a la base de datos";
+
+            boolean actualizado = ctrl.actualizarPrecio(cn, id, precio);
+            if (actualizado) {
+                try {
+                    historiaService.registrarEvento(id, null, AccionEvento.DEFINIR_CONDICIONES,
+                            "Precio actualizado a " + precio);
+                } catch (Exception ignored) {
+                }
+                return "Precio actualizado correctamente";
+            }
+            return "No se pudo actualizar el precio";
+        } catch (Exception e) {
+            return "Error: " + e.getMessage();
         }
     }
 }

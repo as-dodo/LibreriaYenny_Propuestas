@@ -420,7 +420,7 @@ public class EditorForm extends JFrame{
         }
     }
 
-    private void definirCondicionesParaSeleccionada() {
+        private void definirCondicionesParaSeleccionada() {
         if (tabPropuestas == null) return;
 
         int idx = tabPropuestas.getSelectedIndex();
@@ -431,64 +431,30 @@ public class EditorForm extends JFrame{
         if (fila == -1) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Seleccioná primero una propuesta de la lista.",
-                    "Sin selección",
+                    "Selecciona primero una propuesta de la lista.",
+                    "Sin seleccion",
                     JOptionPane.WARNING_MESSAGE
             );
             return;
         }
 
         int propuestaId = (int) tablaActual.getValueAt(fila, 0);
+        String autor = String.valueOf(tablaActual.getValueAt(fila, 1));
         String titulo = String.valueOf(tablaActual.getValueAt(fila, 2));
 
-        // Pedir tirada inicial
-        String tiradaStr = JOptionPane.showInputDialog(
+        DefinirCondicionesDialog dlg = new DefinirCondicionesDialog(
                 this,
-                "Tirada inicial para \"" + titulo + "\":",
-                "Definir Condiciones - Tirada",
-                JOptionPane.QUESTION_MESSAGE
+                propuestaId,
+                autor,
+                titulo,
+                tituloService
         );
+        dlg.setVisible(true);
 
-        if (tiradaStr == null || tiradaStr.trim().isEmpty()) {
-            return; // Usuario canceló
+        if (dlg.isGuardado()) {
+            cargarBandeja();
+            cargarMisPropuestas();
         }
-
-        // Pedir porcentaje de ganancias
-        String porcentajeStr = JOptionPane.showInputDialog(
-                this,
-                "Porcentaje de ganancias para el autor (0-100):",
-                "Definir Condiciones - Porcentaje",
-                JOptionPane.QUESTION_MESSAGE
-        );
-
-        if (porcentajeStr == null || porcentajeStr.trim().isEmpty()) {
-            return; // Usuario canceló
-        }
-
-        // Pedir observaciones (opcional)
-        String observaciones = JOptionPane.showInputDialog(
-                this,
-                "Observaciones (opcional):",
-                "Definir Condiciones - Observaciones",
-                JOptionPane.QUESTION_MESSAGE
-        );
-
-        String resultado = tituloService.definirCondiciones(
-                String.valueOf(propuestaId),
-                tiradaStr.trim(),
-                porcentajeStr.trim(),
-                observaciones
-        );
-
-        JOptionPane.showMessageDialog(
-                this,
-                resultado,
-                "Definir Condiciones",
-                JOptionPane.INFORMATION_MESSAGE
-        );
-
-        cargarBandeja();
-        cargarMisPropuestas();
     }
 
     private void inicializarTablaTitulos() {
@@ -728,4 +694,5 @@ public class EditorForm extends JFrame{
     }
 
 }
+
 
