@@ -11,21 +11,29 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import repository.FileStorage;
 import repository.Validaciones;
 
 public class PropuestaService {
 
     private final HistoriaService historiaService = new HistoriaService();
 
-    public String enviarPropuesta(String escritorId, String titulo, String resumen, String enlace) {
+    public String enviarPropuesta(String escritorId, String titulo, String resumen, String rutaArchivo) {
 
-        if (Validaciones.isBlank(escritorId) || !Validaciones.esNumero(escritorId)) return "Escritor inválido";
-        if (Validaciones.isBlank(titulo))  return "Título obligatorio";
+        if (Validaciones.isBlank(escritorId) || !Validaciones.esNumero(escritorId)) return "Escritor invalido";
+        if (Validaciones.isBlank(titulo))  return "Titulo obligatorio";
         if (Validaciones.isBlank(resumen)) return "Resumen obligatorio";
-        if (enlace != null && enlace.length() > 500) return "Enlace demasiado largo";
+        if (rutaArchivo != null && rutaArchivo.length() > 500) return "Ruta demasiado larga";
 
         int idEscritor = Integer.parseInt(escritorId.trim());
-        String archivoUrl = Validaciones.linkOrNull(enlace);
+        String archivoUrl = null;
+        try {
+            if (!Validaciones.isBlank(rutaArchivo)) {
+                archivoUrl = FileStorage.saveFile(rutaArchivo.trim());
+            }
+        } catch (Exception e) {
+            return "No se pudo guardar el archivo: " + e.getMessage();
+        }
 
         Propuesta propuesta = new Propuesta(
                 idEscritor,
@@ -37,7 +45,7 @@ public class PropuestaService {
         ControllerPropuesta ctrl = new ControllerPropuesta();
 
         try (Connection cn = Conexion.getInstance().getConnection()) {
-            if (cn == null) return "No hay conexión a la base de datos";
+            if (cn == null) return "No hay conexion a la base de datos";
 
             boolean resultado = ctrl.insertarPropuesta(cn, propuesta);
 
@@ -57,12 +65,12 @@ public class PropuestaService {
     }
 
     public String listarPorEscritor(String escritorId) {
-        if (Validaciones.isBlank(escritorId) || !Validaciones.esNumero(escritorId)) return "Escritor inválido";
+        if (Validaciones.isBlank(escritorId) || !Validaciones.esNumero(escritorId)) return "Escritor invalido";
         ControllerPropuesta ctrl = new ControllerPropuesta();
         try (Connection cn = Conexion.getInstance().getConnection()) {
-            if (cn == null) return "No hay conexión a la base de datos";
+            if (cn == null) return "No hay conexion a la base de datos";
             List<String> filas = ctrl.listarPorEscritor(cn, Integer.parseInt(escritorId));
-            if (filas.isEmpty()) return "No tenés propuestas todavía";
+            if (filas.isEmpty()) return "No tenes propuestas todavia";
             return String.join("\n", filas);
         } catch (Exception e) {
             return "Error: " + e.getMessage();
@@ -72,9 +80,9 @@ public class PropuestaService {
     public String listarBandeja() {
         ControllerPropuesta ctrl = new ControllerPropuesta();
         try (Connection cn = Conexion.getInstance().getConnection()) {
-            if (cn == null) return "No hay conexión a la base de datos";
+            if (cn == null) return "No hay conexion a la base de datos";
             List<String> filas = ctrl.listarBandeja(cn);
-            if (filas.isEmpty()) return "Bandeja vacía";
+            if (filas.isEmpty()) return "Bandeja vacia";
             return filas.stream().collect(Collectors.joining("\n"));
         } catch (Exception e) {
             return "Error: " + e.getMessage();
@@ -87,13 +95,13 @@ public class PropuestaService {
     public String rechazar(String propuestaId, Integer editorId) { return decidir(propuestaId, EstadoPropuesta.RECHAZADA, editorId); }
 
     private String decidir(String propuestaId, EstadoPropuesta estado, Integer editorId) {
-        if (Validaciones.isBlank(propuestaId) || !Validaciones.esNumero(propuestaId)) return "ID inválido";
+        if (Validaciones.isBlank(propuestaId) || !Validaciones.esNumero(propuestaId)) return "ID invalido";
 
         int idPropuesta = Integer.parseInt(propuestaId.trim());
 
         ControllerPropuesta ctrl = new ControllerPropuesta();
         try (Connection cn = Conexion.getInstance().getConnection()) {
-            if (cn == null) return "No hay conexión a la base de datos";
+            if (cn == null) return "No hay conexion a la base de datos";
 
             Propuesta propuesta = ctrl.obtenerPorId(cn, idPropuesta);
             if (propuesta == null) {
@@ -133,9 +141,9 @@ public class PropuestaService {
 
 
     public String agregarComentario(String propuestaId, int usuarioId, String comentario) {
-        if (Validaciones.isBlank(propuestaId) || !Validaciones.esNumero(propuestaId)) return "ID inválido";
-        if (usuarioId <= 0) return "Usuario inválido";
-        if (Validaciones.isBlank(comentario)) return "Comentario vacío";
+        if (Validaciones.isBlank(propuestaId) || !Validaciones.esNumero(propuestaId)) return "ID invalido";
+        if (usuarioId <= 0) return "Usuario invalido";
+        if (Validaciones.isBlank(comentario)) return "Comentario vacio";
 
         int idPropuesta = Integer.parseInt(propuestaId.trim());
 
@@ -231,7 +239,5 @@ public class PropuestaService {
             return "Error: " + e.getMessage();
         }
     }
-
-
 
 }

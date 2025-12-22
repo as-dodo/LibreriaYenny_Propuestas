@@ -1,9 +1,8 @@
 package ui.menu;
 
-import bll.usuarios.Escritor;
 import bll.propuestas.Propuesta;
 import bll.services.PropuestaService;
-
+import bll.usuarios.Escritor;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -26,8 +25,10 @@ public class EscritorForm extends JFrame {
     private JButton btnCancelar;
     private JButton salirButton;
     private JLabel lblImagen;
+    private JButton btnAdjuntar;
     private final Escritor escritor;
     private final PropuestaService propuestaService;
+    private String rutaArchivoSeleccionado;
 
     public EscritorForm(Escritor escritor) {
         this.escritor = escritor;
@@ -49,9 +50,15 @@ public class EscritorForm extends JFrame {
 
         inicializarTabla();
         cargarPropuestas();
-
+        rutaArchivoSeleccionado = null;
+        tfLink.setEditable(false);
+        tfLink.setText("Ningun archivo seleccionado");
 
         btnNueva.addActionListener(e -> {
+            tfTitulo.setText("");
+            tfResumen.setText("");
+            tfLink.setText("Ningun archivo seleccionado");
+            rutaArchivoSeleccionado = null;
             CardLayout cl = (CardLayout) rootPanel.getLayout();
             cl.show(rootPanel, "crear");
         });
@@ -64,16 +71,14 @@ public class EscritorForm extends JFrame {
             }
         });
 
-
         btnGuardar.addActionListener(e -> {
             String titulo = tfTitulo.getText().trim();
             String resumen = tfResumen.getText().trim();
-            String link = tfLink.getText().trim();
 
             if (titulo.isEmpty() || resumen.isEmpty()) {
                 JOptionPane.showMessageDialog(
                         this,
-                        "Título y Resumen son obligatorios.",
+                        "Titulo y Resumen son obligatorios.",
                         "Error",
                         JOptionPane.ERROR_MESSAGE
                 );
@@ -84,7 +89,7 @@ public class EscritorForm extends JFrame {
                     String.valueOf(escritor.getId()),
                     titulo,
                     resumen,
-                    link.isBlank() ? null : link
+                    rutaArchivoSeleccionado
             );
 
             JOptionPane.showMessageDialog(this, resultado);
@@ -94,8 +99,8 @@ public class EscritorForm extends JFrame {
 
                 tfTitulo.setText("");
                 tfResumen.setText("");
-                tfLink.setText("");
-
+                tfLink.setText("Ningun archivo seleccionado");
+                rutaArchivoSeleccionado = null;
 
                 CardLayout cl = (CardLayout) rootPanel.getLayout();
                 cl.show(rootPanel, "lista");
@@ -105,20 +110,21 @@ public class EscritorForm extends JFrame {
         btnCancelar.addActionListener(e -> {
             tfTitulo.setText("");
             tfResumen.setText("");
-            tfLink.setText("");
+            tfLink.setText("Ningun archivo seleccionado");
+            rutaArchivoSeleccionado = null;
 
             CardLayout cl = (CardLayout) rootPanel.getLayout();
             cl.show(rootPanel, "lista");
         });
 
+        btnAdjuntar.addActionListener(e -> seleccionarArchivo());
     }
 
     private void inicializarTabla() {
         DefaultTableModel model = new DefaultTableModel(
-                new Object[]{"Título", "Resumen", "Fecha", "Estado"}, 0
+                new Object[]{"Titulo", "Resumen", "Fecha", "Estado"}, 0
         );
         tblMisPropuestas.setModel(model);
-
 
         tblMisPropuestas.setFillsViewportHeight(true);
         tblMisPropuestas.setRowHeight(28);
@@ -127,22 +133,18 @@ public class EscritorForm extends JFrame {
         Color seaSelected = new Color(0, 150, 136);
         Color seaHeader = new Color(224, 242, 241);
 
-
         tblMisPropuestas.setSelectionBackground(seaSelected);
         tblMisPropuestas.setSelectionForeground(Color.WHITE);
-
 
         tblMisPropuestas.setShowHorizontalLines(true);
         tblMisPropuestas.setShowVerticalLines(false);
         tblMisPropuestas.setGridColor(new Color(200, 220, 220));
-
 
         JTableHeader header = tblMisPropuestas.getTableHeader();
         header.setReorderingAllowed(false);
         header.setBackground(seaHeader);
         header.setFont(new Font("SansSerif", Font.BOLD, 13));
         header.setOpaque(true);
-
 
         tblMisPropuestas.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
@@ -184,6 +186,15 @@ public class EscritorForm extends JFrame {
                     p.getEstado(),
                     p.getFechaDecision()
             });
+        }
+    }
+
+    private void seleccionarArchivo() {
+        JFileChooser chooser = new JFileChooser();
+        int resultado = chooser.showOpenDialog(this);
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            rutaArchivoSeleccionado = chooser.getSelectedFile().getAbsolutePath();
+            tfLink.setText(chooser.getSelectedFile().getName());
         }
     }
 }

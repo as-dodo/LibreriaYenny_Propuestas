@@ -2,7 +2,6 @@ package ui.menu;
 
 import bll.services.PropuestaService;
 import bll.usuarios.Escritor;
-
 import javax.swing.*;
 
 public class MenuEscritor implements Menu {
@@ -44,11 +43,12 @@ public class MenuEscritor implements Menu {
     }
 
     private void enviarPropuesta() {
-        String titulo  = JOptionPane.showInputDialog("Título propuesto:");
+        String titulo  = JOptionPane.showInputDialog("Titulo propuesto:");
         if (titulo == null) return;
         String resumen = JOptionPane.showInputDialog("Resumen (breve):");
         if (resumen == null) return;
-        String enlace  = JOptionPane.showInputDialog("Enlace al archivo (opcional):");
+        String enlace  = JOptionPane.showInputDialog("Ruta del archivo (opcional):");
+        if (enlace != null && enlace.isBlank()) enlace = null;
 
         String msg = service.enviarPropuesta(escritor.getId(), titulo, resumen, enlace);
         JOptionPane.showMessageDialog(null, msg);
@@ -61,4 +61,3 @@ public class MenuEscritor implements Menu {
         JOptionPane.showMessageDialog(null, new JScrollPane(ta), "Mis propuestas", JOptionPane.INFORMATION_MESSAGE);
     }
 }
-

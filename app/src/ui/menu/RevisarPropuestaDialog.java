@@ -1,6 +1,7 @@
 package ui.menu;
 
 import bll.services.PropuestaService;
+import repository.FileStorage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,11 +26,13 @@ public class RevisarPropuestaDialog extends JDialog {
     private JButton btnRechazar;
     private JButton btnAprobar;
     private JButton btnCerrar;
+    private JButton btnDescargar;
 
     private final int propuestaId;
     private final int editorId;
     private final PropuestaService propuestaService = new PropuestaService();
     private final Runnable onActionCallback;
+    private final String archivoUrl;
 
     public RevisarPropuestaDialog(Frame owner,
                                   int propuestaId,
@@ -47,6 +50,7 @@ public class RevisarPropuestaDialog extends JDialog {
         this.propuestaId = propuestaId;
         this.editorId = editorId;
         this.onActionCallback = onActionCallback;
+        this.archivoUrl = archivoUrl;
 
         setContentPane(rootPanel);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -63,7 +67,7 @@ public class RevisarPropuestaDialog extends JDialog {
 
         lblArchivo.setText(
                 (archivoUrl != null && !archivoUrl.isBlank())
-                        ? archivoUrl
+                        ? FileStorage.getFileName(archivoUrl)
                         : "-"
         );
 
@@ -108,7 +112,7 @@ public class RevisarPropuestaDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 String comentario = JOptionPane.showInputDialog(
                         RevisarPropuestaDialog.this,
-                        "Ingres\u00e1 tu comentario:",
+                        "Ingresa tu comentario:",
                         "Agregar Comentario",
                         JOptionPane.PLAIN_MESSAGE
                 );
@@ -128,6 +132,40 @@ public class RevisarPropuestaDialog extends JDialog {
                 }
             }
         });
+        btnDescargar.addActionListener(e -> descargarArchivo());
     }
 
+    private void descargarArchivo() {
+        if (archivoUrl == null || archivoUrl.isBlank()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "La propuesta no tiene archivo adjunto.",
+                    "Descargar",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+            return;
+        }
+
+        JFileChooser chooser = new JFileChooser();
+        chooser.setSelectedFile(new java.io.File(FileStorage.getFileName(archivoUrl)));
+        int result = chooser.showSaveDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) return;
+
+        try {
+            FileStorage.copyTo(archivoUrl, chooser.getSelectedFile().toPath());
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Archivo descargado correctamente.",
+                    "Descargar",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No se pudo descargar el archivo: " + ex.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
 }

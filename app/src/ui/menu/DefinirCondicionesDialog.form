@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ui.menu.DefinirCondicionesDialog">
+  <grid id="27dc6" binding="rootPanel" layout-manager="GridLayoutManager" row-count="7" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties>
+      <preferredSize width="500" height="400"/>
+    </properties>
+    <border type="empty">
+      <size top="20" left="20" bottom="20" right="20"/>
+    </border>
+    <children>
+      <component id="2109d" class="javax.swing.JLabel" binding="lblTitulo">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Titulo"/>
+        </properties>
+      </component>
+      <component id="f24d1" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Autor"/>
+        </properties>
+      </component>
+      <component id="8eb02" class="javax.swing.JLabel" binding="tirada">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Tirada inicial"/>
+        </properties>
+      </component>
+      <component id="a2cde" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Precio"/>
+        </properties>
+      </component>
+      <component id="b8e38" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Porcentaje de ganancias"/>
+        </properties>
+      </component>
+      <component id="8930" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Observaciones (opcional)"/>
+        </properties>
+      </component>
+      <vspacer id="68b6b">
+        <constraints>
+          <grid row="0" column="2" row-span="6" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+      <vspacer id="42967">
+        <constraints>
+          <grid row="0" column="0" row-span="6" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+      <grid id="ea977" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="empty">
+          <size top="10" left="0" bottom="10" right="0"/>
+        </border>
+        <children>
+          <component id="38042" class="javax.swing.JButton" binding="guardarButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <preferredSize width="170" height="35"/>
+              <text value="Guardar"/>
+            </properties>
+          </component>
+          <component id="2ba57" class="javax.swing.JButton" binding="cancelarButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <preferredSize width="170" height="35"/>
+              <text value="Cancelar"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="dc6ce" class="javax.swing.JTextField" binding="fldPrecio">
+        <constraints>
+          <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="30"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="506b6" class="javax.swing.JTextField" binding="fldPorcentaje">
+        <constraints>
+          <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="30"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="22b2a" class="javax.swing.JTextField" binding="fldObservaciones">
+        <constraints>
+          <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="30"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="acc07" class="javax.swing.JTextField" binding="fldAutor">
+        <constraints>
+          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="30"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="b6e04" class="javax.swing.JTextField" binding="fldTirada">
+        <constraints>
+          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="30"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="8345a" class="javax.swing.JTextField" binding="fldTitulo">
+        <constraints>
+          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="30"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+    </children>
+  </grid>
+</form>
